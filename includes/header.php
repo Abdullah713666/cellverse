@@ -43,8 +43,8 @@ $absolute_og_image = $absolute_base . $page_image;
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/style.css">
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/sprint1.css?v=1.0">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/style.css?v=2.0">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/sprint1.css?v=2.0">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
     <noscript><style>body.is-loading .page-curtain { display: none; }</style></noscript>
 
