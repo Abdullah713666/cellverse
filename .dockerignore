@@ -1,0 +1,10 @@
+.git
+.gitignore
+.installed
+uploads/
+*.log
+node_modules/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

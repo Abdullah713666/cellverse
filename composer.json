@@ -1,0 +1,15 @@
+    {
+      "name": "abdullah713666/cellverse",
+      "description": "CellVerse B2B wholesale mobile accessories catalog (PHP + MySQL)",
+      "type": "project",
+      "require": {
+        "php": ">=8.0",
+        "ext-pdo": "*",
+        "ext-pdo_mysql": "*"
+      },
+      "config": {
+        "platform": {
+          "php": "8.2"
+        }
+      }
+    }
