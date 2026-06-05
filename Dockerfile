@@ -10,5 +10,6 @@ RUN chmod +x /usr/local/bin/start.sh
 
 EXPOSE 8080
 
-# JSON exec form for proper signal handling + reliable $PORT expansion
-CMD ["/usr/local/bin/start.sh"]
+# ENTRYPOINT handles expansion of $PORT, then exec's whatever args Railway passes via startCommand
+ENTRYPOINT ["/usr/local/bin/start.sh"]
+CMD ["php", "-S", "0.0.0.0:${PORT:-8080}", "-t", "."]
