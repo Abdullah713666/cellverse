@@ -27,4 +27,11 @@ header('Referrer-Policy: strict-origin-when-cross-origin');
 
 // Define base path
 define('BASE_PATH', dirname(__DIR__));
-define('BASE_URL', '/' . basename(BASE_PATH));
+
+// On Railway (and other PaaS that proxy to /), the app lives at root.
+// Detect via RAILWAY_* env vars and force BASE_URL to root.
+if (getenv('RAILWAY_ENVIRONMENT') || getenv('RAILWAY_PROJECT_ID') || getenv('RAILWAY_SERVICE_ID')) {
+    define('BASE_URL', '');
+} else {
+    define('BASE_URL', '/' . basename(BASE_PATH));
+}
