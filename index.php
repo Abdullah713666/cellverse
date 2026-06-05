@@ -22,33 +22,34 @@ try {
 }
 ?>
 
-<section class="hero">
+<section class="hero" id="hero">
     <div class="hero-bg">
         <div class="grid-overlay"></div>
         <div class="gradient-mesh"></div>
+        <div class="ambient-glow" aria-hidden="true"></div>
     </div>
     <div class="container hero-grid">
         <div class="hero-content">
-            <span class="hero-tag">
+            <span class="hero-tag reveal" data-reveal-delay="0">
                 <span class="hero-tag-dot"></span>
                 Wholesale Mobile Accessories
             </span>
-            <h1>
-                <span class="hero-line"><span class="hero-word">Bulk</span> <span class="hero-word">Mobile</span></span>
-                <span class="hero-line"><span class="hero-word">Accessories,</span></span>
-                <span class="hero-line"><span class="hero-word hero-word--accent">Wholesale</span> <span class="hero-word">Pricing.</span></span>
+            <h1 class="hero-title">
+                <span class="hero-line"><span class="hero-word reveal" data-reveal-delay="1">Bulk</span> <span class="hero-word reveal" data-reveal-delay="2">Mobile</span></span>
+                <span class="hero-line"><span class="hero-word reveal" data-reveal-delay="3">Accessories,</span></span>
+                <span class="hero-line"><span class="hero-word hero-word--accent reveal" data-reveal-delay="4">Wholesale</span> <span class="hero-word reveal" data-reveal-delay="5">Pricing.</span></span>
             </h1>
-            <p>Your trusted supplier for premium mobile accessories. Cases, chargers, earphones and more, delivered at competitive bulk rates for businesses that scale.</p>
-            <div class="hero-buttons">
-                <a href="products.php" class="btn btn-primary btn-lg">
+            <p class="reveal" data-reveal-delay="6">Your trusted supplier for premium mobile accessories. Cases, chargers, earphones and more, delivered at competitive bulk rates for businesses that scale.</p>
+            <div class="hero-buttons reveal" data-reveal-delay="7">
+                <a href="products.php" class="btn btn-primary btn-lg magnetic">
                     <span>Browse Products</span>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                    <svg class="btn-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
                 </a>
                 <a href="bulk-order.php" class="btn btn-ghost btn-lg">
                     <span>Request Quote</span>
                 </a>
             </div>
-            <div class="hero-trust">
+            <div class="hero-trust reveal" data-reveal-delay="8">
                 <div class="hero-trust-avatars">
                     <span class="hero-trust-avatar" style="--c:#00d4aa">A</span>
                     <span class="hero-trust-avatar" style="--c:#7c3aed">M</span>
@@ -61,35 +62,57 @@ try {
             </div>
         </div>
         <div class="hero-visual" data-parallax="0.08">
-            <div class="hero-card hero-card--main">
+            <div class="hero-card hero-card--main border-beam">
                 <div class="hero-card-glow"></div>
                 <div class="hero-card-header">
-                    <div class="hero-card-dots">
+                    <div class="hero-card-dots" aria-hidden="true">
                         <span></span><span></span><span></span>
                     </div>
                     <div class="hero-card-title">Live Order Feed</div>
                 </div>
-                <div class="hero-card-rows">
-                    <div class="hero-card-row">
-                        <span class="hero-card-pill" style="--c:#00d4aa">Cases</span>
-                        <span class="hero-card-bar"><span style="width:86%"></span></span>
-                        <span class="hero-card-val">2,400</span>
-                    </div>
-                    <div class="hero-card-row">
-                        <span class="hero-card-pill" style="--c:#7c3aed">Chargers</span>
-                        <span class="hero-card-bar"><span style="width:64%"></span></span>
-                        <span class="hero-card-val">1,820</span>
-                    </div>
-                    <div class="hero-card-row">
-                        <span class="hero-card-pill" style="--c:#f59e0b">Earphones</span>
-                        <span class="hero-card-bar"><span style="width:48%"></span></span>
-                        <span class="hero-card-val">1,310</span>
-                    </div>
-                    <div class="hero-card-row">
-                        <span class="hero-card-pill" style="--c:#ef4444">Power</span>
-                        <span class="hero-card-bar"><span style="width:32%"></span></span>
-                        <span class="hero-card-val">910</span>
-                    </div>
+                <div class="ticker-viewport" role="region" aria-label="Live order distribution by category">
+                    <ul class="ticker-track" id="ticker">
+                        <li class="ticker-item">
+                            <span class="hero-card-pill" style="--c:#00d4aa">Cases</span>
+                            <span class="hero-card-bar"><span style="width:86%"></span></span>
+                            <span class="hero-card-val">2,400</span>
+                        </li>
+                        <li class="ticker-item">
+                            <span class="hero-card-pill" style="--c:#7c3aed">Chargers</span>
+                            <span class="hero-card-bar"><span style="width:64%"></span></span>
+                            <span class="hero-card-val">1,820</span>
+                        </li>
+                        <li class="ticker-item">
+                            <span class="hero-card-pill" style="--c:#f59e0b">Earphones</span>
+                            <span class="hero-card-bar"><span style="width:48%"></span></span>
+                            <span class="hero-card-val">1,310</span>
+                        </li>
+                        <li class="ticker-item">
+                            <span class="hero-card-pill" style="--c:#ef4444">Power</span>
+                            <span class="hero-card-bar"><span style="width:32%"></span></span>
+                            <span class="hero-card-val">910</span>
+                        </li>
+                        <li class="ticker-item" aria-hidden="true">
+                            <span class="hero-card-pill" style="--c:#00d4aa">Cases</span>
+                            <span class="hero-card-bar"><span style="width:86%"></span></span>
+                            <span class="hero-card-val">2,400</span>
+                        </li>
+                        <li class="ticker-item" aria-hidden="true">
+                            <span class="hero-card-pill" style="--c:#7c3aed">Chargers</span>
+                            <span class="hero-card-bar"><span style="width:64%"></span></span>
+                            <span class="hero-card-val">1,820</span>
+                        </li>
+                        <li class="ticker-item" aria-hidden="true">
+                            <span class="hero-card-pill" style="--c:#f59e0b">Earphones</span>
+                            <span class="hero-card-bar"><span style="width:48%"></span></span>
+                            <span class="hero-card-val">1,310</span>
+                        </li>
+                        <li class="ticker-item" aria-hidden="true">
+                            <span class="hero-card-pill" style="--c:#ef4444">Power</span>
+                            <span class="hero-card-bar"><span style="width:32%"></span></span>
+                            <span class="hero-card-val">910</span>
+                        </li>
+                    </ul>
                 </div>
                 <div class="hero-card-foot">
                     <span class="hero-card-dot live"></span>
@@ -132,43 +155,43 @@ try {
 <section class="section stats-section" id="stats">
     <div class="container">
         <div class="stats-header">
-            <span class="kicker">By the numbers</span>
-            <h2>Built for scale, trusted for quality</h2>
+            <span class="kicker reveal" data-reveal-delay="0">By the numbers</span>
+            <h2 class="reveal" data-reveal-delay="1">Built for scale, trusted for quality</h2>
         </div>
         <div class="stats-grid">
-            <div class="stat-card">
+            <div class="stat-card border-beam reveal" data-count="500" data-suffix="+" data-reveal-delay="0">
                 <div class="stat-icon">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7l-8 10-4-4"/></svg>
                 </div>
                 <div class="stat-body">
-                    <div class="stat-number">500+</div>
+                    <div class="stat-number"><span class="count-value">0</span><span class="count-suffix">+</span></div>
                     <div class="stat-label">Products stocked</div>
                 </div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card border-beam--bright reveal" data-count="2000" data-suffix="+" data-reveal-delay="1">
                 <div class="stat-icon">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 </div>
                 <div class="stat-body">
-                    <div class="stat-number">2,000+</div>
+                    <div class="stat-number"><span class="count-value">0</span><span class="count-suffix">+</span></div>
                     <div class="stat-label">Active retailers</div>
                 </div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card border-beam reveal" data-count="50" data-suffix="+" data-reveal-delay="2">
                 <div class="stat-icon">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg>
                 </div>
                 <div class="stat-body">
-                    <div class="stat-number">50+</div>
+                    <div class="stat-number"><span class="count-value">0</span><span class="count-suffix">+</span></div>
                     <div class="stat-label">Top brands</div>
                 </div>
             </div>
-            <div class="stat-card">
+            <div class="stat-card border-beam reveal" data-count="10" data-suffix="+" data-reveal-delay="3">
                 <div class="stat-icon">
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
                 </div>
                 <div class="stat-body">
-                    <div class="stat-number">10+</div>
+                    <div class="stat-number"><span class="count-value">0</span><span class="count-suffix">+</span></div>
                     <div class="stat-label">Years operating</div>
                 </div>
             </div>
