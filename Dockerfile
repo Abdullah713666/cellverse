@@ -5,8 +5,10 @@ RUN docker-php-ext-install pdo pdo_mysql
 WORKDIR /app
 
 COPY . /app
+COPY start.sh /usr/local/bin/start.sh
+RUN chmod +x /usr/local/bin/start.sh
 
 EXPOSE 8080
 
-# Use shell form so $PORT is expanded; Railway sets PORT automatically
-CMD php -S 0.0.0.0:${PORT:-8080} -t .
+# JSON exec form for proper signal handling + reliable $PORT expansion
+CMD ["/usr/local/bin/start.sh"]
