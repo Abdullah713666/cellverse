@@ -32,7 +32,7 @@
     --radius-full: 9999px;
     --font-display: 'Space Grotesk', sans-serif;
     --font-body: 'DM Sans', sans-serif;
-    --container-max: 1200px;
+    --container-max: 1280px;
     --spacing-xs: 4px;
     --spacing-sm: 12px;
     --spacing-md: 24px;
@@ -112,6 +112,18 @@ ul {
     max-width: var(--container-max);
     margin: 0 auto;
     padding: 0 var(--spacing-md);
+}
+
+@media (min-width: 768px) {
+    .container {
+        padding: 0 var(--spacing-lg);
+    }
+}
+
+@media (min-width: 1200px) {
+    .container {
+        padding: 0 64px;
+    }
 }
 
 /* === Typography === */

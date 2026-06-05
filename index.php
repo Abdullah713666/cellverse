@@ -24,19 +24,8 @@ try {
 
 <section class="hero">
     <div class="hero-bg">
-        <canvas id="particleCanvas"></canvas>
         <div class="grid-overlay"></div>
         <div class="gradient-mesh"></div>
-        <div class="hero-orb hero-orb--a" data-parallax="0.18"></div>
-        <div class="hero-orb hero-orb--b" data-parallax="0.32"></div>
-    </div>
-    <div class="floating-shapes">
-        <div class="floating-shape"></div>
-        <div class="floating-shape"></div>
-        <div class="floating-shape"></div>
-        <div class="floating-shape"></div>
-        <div class="floating-shape"></div>
-        <div class="floating-shape"></div>
     </div>
     <div class="container hero-grid">
         <div class="hero-content">
@@ -51,11 +40,11 @@ try {
             </h1>
             <p>Your trusted supplier for premium mobile accessories. Cases, chargers, earphones and more, delivered at competitive bulk rates for businesses that scale.</p>
             <div class="hero-buttons">
-                <a href="products.php" class="btn btn-primary btn-lg pulse-glow magnetic">
+                <a href="products.php" class="btn btn-primary btn-lg">
                     <span>Browse Products</span>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
                 </a>
-                <a href="bulk-order.php" class="btn btn-ghost btn-lg magnetic">
+                <a href="bulk-order.php" class="btn btn-ghost btn-lg">
                     <span>Request Quote</span>
                 </a>
             </div>
@@ -107,26 +96,8 @@ try {
                     <span>Real-time wholesale distribution</span>
                 </div>
             </div>
-            <div class="hero-card hero-card--chip">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
-                <div>
-                    <strong>Min. 10 units</strong>
-                    <span>Low minimum orders</span>
-                </div>
-            </div>
-            <div class="hero-card hero-card--chip hero-card--chip-b">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
-                <div>
-                    <strong>24-48h dispatch</strong>
-                    <span>Nationwide shipping</span>
-                </div>
-            </div>
         </div>
     </div>
-    <a href="#stats" class="hero-scroll-cue" aria-label="Scroll down">
-        <span class="hero-scroll-cue-text">Scroll</span>
-        <span class="hero-scroll-cue-line"></span>
-    </a>
 </section>
 
 <div class="container"><div class="section-divider"></div></div>
@@ -170,7 +141,7 @@ try {
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7l-8 10-4-4"/></svg>
                 </div>
                 <div class="stat-body">
-                    <div class="stat-number" data-count="500">0</div>
+                    <div class="stat-number">500+</div>
                     <div class="stat-label">Products stocked</div>
                 </div>
             </div>
@@ -179,7 +150,7 @@ try {
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
                 </div>
                 <div class="stat-body">
-                    <div class="stat-number" data-count="2000">0</div>
+                    <div class="stat-number">2,000+</div>
                     <div class="stat-label">Active retailers</div>
                 </div>
             </div>
@@ -188,7 +159,7 @@ try {
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 7h7l-5.5 4 2 7L12 16l-6.5 4 2-7L2 9h7z"/></svg>
                 </div>
                 <div class="stat-body">
-                    <div class="stat-number" data-count="50">0</div>
+                    <div class="stat-number">50+</div>
                     <div class="stat-label">Top brands</div>
                 </div>
             </div>
@@ -197,7 +168,7 @@ try {
                     <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
                 </div>
                 <div class="stat-body">
-                    <div class="stat-number" data-count="10">0</div>
+                    <div class="stat-number">10+</div>
                     <div class="stat-label">Years operating</div>
                 </div>
             </div>
@@ -217,7 +188,7 @@ try {
         </div>
         <div class="products-grid">
             <?php foreach ($featured_products as $product): ?>
-            <article class="product-card tilt-card" data-product>
+            <article class="product-card product-card" data-product>
                 <div class="product-card-image">
                     <?php if ($product['image_path']): ?>
                         <img src="<?php echo BASE_URL; ?>/<?php echo htmlspecialchars($product['image_path']); ?>" alt="<?php echo htmlspecialchars($product['name']); ?>" loading="lazy" data-product-img>
@@ -247,7 +218,7 @@ try {
             <?php endforeach; ?>
         </div>
         <div class="section-cta">
-            <a href="products.php" class="btn btn-ghost magnetic">
+            <a href="products.php" class="btn btn-ghost">
                 <span>View all products</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
             </a>
@@ -359,11 +330,11 @@ try {
                 <h2>Place a bulk order today</h2>
                 <p>Competitive wholesale pricing across the full catalog. Submit a request and our team responds within hours.</p>
                 <div class="cta-actions">
-                    <a href="bulk-order.php" class="btn btn-primary btn-lg magnetic">
+                    <a href="bulk-order.php" class="btn btn-primary btn-lg">
                         <span>Request bulk quote</span>
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
                     </a>
-                    <a href="contact.php" class="btn btn-ghost btn-lg magnetic">Talk to sales</a>
+                    <a href="contact.php" class="btn btn-ghost btn-lg">Talk to sales</a>
                 </div>
             </div>
         </div>
