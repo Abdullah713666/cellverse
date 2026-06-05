@@ -1,0 +1,18 @@
+# CellVerse runtime artifacts
+.installed
+
+# Uploaded files (runtime data, not source)
+uploads/
+*.log
+error.log
+php_errors.log
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Local env overrides
+.env
+.env.local

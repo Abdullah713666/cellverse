@@ -1,0 +1,416 @@
+/* ============================================================
+   Sprint 1 — Cellverse polish
+   Patterns: per-page hero variants (A), page transition (B),
+   form polish (C), FAQ enhancement (D).
+   All gated by prefers-reduced-motion.
+   ============================================================ */
+
+/* ---------- A: Per-page hero variants (decorative only) ---------- */
+.page-hero-variant {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+.page-hero-content { position: relative; z-index: 2; }
+.hero-orb, .grid-overlay { z-index: 1; }
+
+/* --- About: animated timeline ribbon --- */
+.page-hero-variant--about .ribbon {
+  position: absolute;
+  right: 8%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 320px;
+  height: 120px;
+  opacity: 0.85;
+}
+.page-hero-variant--about .ribbon path {
+  fill: none;
+  stroke: var(--color-primary);
+  stroke-width: 1.5;
+  stroke-dasharray: 800;
+  stroke-dashoffset: 800;
+  animation: ribbonDraw 2.2s ease-out 0.4s forwards;
+}
+.page-hero-variant--about .ribbon-dot {
+  fill: var(--color-primary);
+  opacity: 0;
+  animation: dotPop 0.4s ease-out forwards;
+}
+.page-hero-variant--about .ribbon-dot:nth-of-type(2) { animation-delay: 0.9s; }
+.page-hero-variant--about .ribbon-dot:nth-of-type(3) { animation-delay: 1.2s; }
+.page-hero-variant--about .ribbon-dot:nth-of-type(4) { animation-delay: 1.5s; }
+.page-hero-variant--about .ribbon-dot:nth-of-type(5) { animation-delay: 1.8s; }
+@keyframes ribbonDraw { to { stroke-dashoffset: 0; } }
+@keyframes dotPop { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: scale(1); } }
+
+/* --- Contact: pulsing concentric rings (sonar) --- */
+.page-hero-variant--contact .pulse-rings {
+  position: absolute;
+  right: 12%;
+  top: 50%;
+  transform: translate(50%, -50%);
+  width: 200px;
+  height: 200px;
+}
+.page-hero-variant--contact .pulse-ring {
+  position: absolute;
+  inset: 0;
+  border: 1.5px solid var(--color-primary);
+  border-radius: 50%;
+  opacity: 0;
+  animation: pulseRing 3s ease-out infinite;
+}
+.page-hero-variant--contact .pulse-ring--b { animation-delay: 1s; }
+.page-hero-variant--contact .pulse-ring--c { animation-delay: 2s; }
+.page-hero-variant--contact .pulse-center {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 14px; height: 14px;
+  background: var(--color-primary);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 16px var(--color-primary);
+  animation: pulseCenter 2s ease-in-out infinite;
+}
+@keyframes pulseRing {
+  0%   { transform: scale(0.4); opacity: 0.7; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+@keyframes pulseCenter {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50%      { transform: translate(-50%, -50%) scale(1.3); }
+}
+
+/* --- FAQ: floating question marks --- */
+.page-hero-variant--faq .floating-q {
+  position: absolute;
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--color-primary);
+  opacity: 0.18;
+  user-select: none;
+  animation: floatQ 6s ease-in-out infinite;
+}
+.page-hero-variant--faq .floating-q--a { right: 14%; top: 22%; font-size: 5rem; animation-delay: 0s; }
+.page-hero-variant--faq .floating-q--b { right: 8%;  top: 55%; font-size: 3.5rem; animation-delay: 1.5s; opacity: 0.12; }
+.page-hero-variant--faq .floating-q--c { right: 22%; top: 70%; font-size: 2.5rem; animation-delay: 3s; opacity: 0.10; }
+@keyframes floatQ {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-18px) rotate(6deg); }
+}
+
+/* --- Bulk order: animated product chips --- */
+.page-hero-variant--bulk .bulk-chip {
+  position: absolute;
+  width: 180px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-md);
+  padding: 10px;
+  backdrop-filter: blur(8px);
+  animation: floatChip 5s ease-in-out infinite;
+}
+.page-hero-variant--bulk .bulk-chip--a { right: 12%; top: 28%; animation-delay: 0s; }
+.page-hero-variant--bulk .bulk-chip--b { right: 5%;  top: 50%; animation-delay: 1.6s; }
+.page-hero-variant--bulk .bulk-chip--c { right: 16%; top: 70%; animation-delay: 3.2s; }
+.page-hero-variant--bulk .chip-thumb {
+  width: 100%; height: 50px;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  border-radius: 6px;
+  margin-bottom: 8px;
+  opacity: 0.6;
+}
+.page-hero-variant--bulk .chip-line {
+  height: 6px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 3px;
+  margin-bottom: 4px;
+}
+.page-hero-variant--bulk .chip-line--name { width: 70%; }
+.page-hero-variant--bulk .chip-line--price { width: 40%; background: var(--color-primary); opacity: 0.6; }
+@keyframes floatChip {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-10px); }
+}
+
+/* --- Products: live stock counter --- */
+.page-hero-variant--products .live-stock {
+  position: absolute;
+  right: 10%;
+  top: 50%;
+  transform: translateY(-50%);
+  text-align: right;
+  font-family: var(--font-display);
+  color: var(--text-primary);
+}
+.page-hero-variant--products .live-stock-num {
+  font-size: clamp(3rem, 8vw, 5rem);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--color-primary);
+  font-variant-numeric: tabular-nums;
+}
+.page-hero-variant--products .live-stock-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 6px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+.page-hero-variant--products .live-stock-pulse {
+  display: inline-block;
+  width: 8px; height: 8px;
+  background: var(--color-primary);
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
+  animation: liveDot 1.5s ease-in-out infinite;
+}
+@keyframes liveDot {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50%      { opacity: 1; transform: scale(1.4); }
+}
+
+/* Hide all variants on small screens */
+@media (max-width: 768px) {
+  .page-hero-variant { display: none; }
+}
+
+/* ---------- B: Page transition curtain ---------- */
+.page-curtain {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  transform: scaleX(0);
+  transform-origin: right center;
+  z-index: 99999;
+  pointer-events: none;
+  will-change: transform;
+  transition: transform 0.55s cubic-bezier(0.65, 0, 0.35, 1);
+}
+/* When JS has booted and the body is in the "loading" state, the curtain
+   is fully covering the page; removing the class animates it open. */
+body.is-loading .page-curtain {
+  transform: scaleX(1);
+}
+
+/* ---------- C: Form field polish ---------- */
+.form-group {
+  position: relative;
+}
+.form-group.is-focused label,
+.form-group.has-value label {
+  color: var(--color-primary);
+}
+.form-group label {
+  transition: color var(--transition-fast);
+}
+.form-group input,
+.form-group textarea,
+.form-group select {
+  transition: border-color var(--transition-fast),
+              box-shadow var(--transition-fast),
+              background-color var(--transition-fast);
+}
+.form-group.is-focused input,
+.form-group.is-focused textarea,
+.form-group.is-focused select {
+  border-color: var(--color-primary);
+  background: var(--bg-surface-high);
+  box-shadow: 0 0 0 3px rgba(0, 212, 170, 0.15);
+}
+.form-success,
+.form-error {
+  animation: formMessageIn 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+@keyframes formMessageIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- D: FAQ enhancement ---------- */
+.faq-item {
+  position: relative;
+  border-left: 3px solid transparent;
+  transition: border-color 0.4s var(--ease-smooth, cubic-bezier(0.2, 0.8, 0.2, 1)),
+              background-color 0.3s ease;
+}
+.faq-item.open {
+  border-left-color: var(--color-primary);
+  background: rgba(0, 212, 170, 0.03);
+}
+.faq-question svg {
+  transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), color 0.3s ease;
+}
+.faq-item.open .faq-question svg {
+  transform: rotate(180deg);
+  color: var(--color-primary);
+}
+.faq-answer-inner {
+  padding-top: 4px;
+  border-top: 1px solid rgba(0, 212, 170, 0.1);
+  margin-top: 4px;
+}
+.faq-item.open .faq-answer-inner {
+  animation: faqAnswerIn 0.4s ease-out 0.1s both;
+}
+@keyframes faqAnswerIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================
+   E: Simple motion (af-workshop pattern) — additive layer.
+   Pure CSS classes + tiny IntersectionObserver (sprint1.js).
+   Coexists with the existing GSAP work.
+   ============================================================ */
+
+/* Hidden by default; .in-view reveals. */
+.fade-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, transform;
+}
+.slide-left {
+  opacity: 0;
+  transform: translateX(-60px);
+  transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, transform;
+}
+.scale-reveal {
+  opacity: 0;
+  transform: scale(0.85);
+  transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: opacity, transform;
+}
+.fade-up.in-view,
+.slide-left.in-view,
+.scale-reveal.in-view {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+
+/* Per-child delay for stagger-children wrapper.
+   JS sets --i on each child; CSS multiplies it into the delay. */
+.stagger-children > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1) calc(var(--i, 0) * 70ms),
+              transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) calc(var(--i, 0) * 70ms);
+}
+.stagger-children.in-view > * {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Shimmer overlay on hover (works on .shimmer-card + descendants). */
+.shimmer-card {
+  position: relative;
+  overflow: hidden;
+}
+.shimmer-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  left: -100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 212, 170, 0.08), transparent);
+  pointer-events: none;
+  transition: none;
+}
+.shimmer-card:hover::after {
+  animation: shimmerSlide 0.9s ease forwards;
+}
+@keyframes shimmerSlide {
+  to { left: 100%; }
+}
+
+/* 3D tilt on hover. */
+.tilt-card {
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+  perspective: 800px;
+}
+.tilt-card:hover {
+  transform: perspective(800px) rotateY(-2deg) rotateX(2deg) translateY(-4px);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.35);
+}
+
+/* Box-shadow pulse for CTAs. */
+.pulse-glow {
+  animation: pulseGlow 2.5s ease-in-out infinite;
+}
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(0, 212, 170, 0.35); }
+  50%      { box-shadow: 0 0 22px 4px rgba(0, 212, 170, 0.12); }
+}
+
+/* Animated horizontal divider. */
+.section-divider {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.section-divider.in-view {
+  transform: scaleX(1);
+}
+
+/* Tag dot pulse (for "Restored"/"Handcrafted" labels). */
+.tag-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  margin-right: 6px;
+  vertical-align: middle;
+  animation: tagPulse 2.5s ease-in-out infinite;
+}
+@keyframes tagPulse {
+  0%, 100% { opacity: 0.45; transform: scale(1); }
+  50%      { opacity: 1;    transform: scale(1.35); }
+}
+
+/* Hover lift for product-card when no GSAP is bound. */
+.simple-lift {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.simple-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.28);
+}
+
+/* ---------- Reduced motion guard ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .page-curtain { display: none; }
+  .page-hero-variant--about .ribbon path { stroke-dashoffset: 0; }
+  .page-hero-variant--about .ribbon-dot { opacity: 1; transform: scale(1); }
+  .page-hero-variant--contact .pulse-ring { animation: none; opacity: 0; }
+  .page-hero-variant--contact .pulse-center { animation: none; }
+  .page-hero-variant--faq .floating-q { animation: none; }
+  .page-hero-variant--bulk .bulk-chip { animation: none; }
+  .page-hero-variant--products .live-stock-pulse { animation: none; opacity: 1; }
+  .form-success, .form-error { animation: none; }
+  .faq-item.open .faq-answer-inner { animation: none; }
+
+  /* Simple motion — show all in final state */
+  .fade-up, .slide-left, .scale-reveal,
+  .stagger-children > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .section-divider { transform: scaleX(1) !important; }
+  .pulse-glow, .tag-dot, .tilt-card { animation: none !important; transition: none !important; }
+  .shimmer-card::after { display: none; }
+}

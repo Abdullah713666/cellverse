@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /includes/
+Disallow: /config/
+Disallow: /api/
+Disallow: /*?product=
+
+Sitemap: /cellverse/sitemap.xml
