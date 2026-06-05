@@ -94,5 +94,6 @@
     <script src="<?php echo BASE_URL; ?>/js/impeccable-extras2.min.js" defer></script>
     <script src="<?php echo BASE_URL; ?>/js/sprint1.min.js?v=1.0" defer></script>
     <script src="<?php echo BASE_URL; ?>/js/hero-stats.js?v=1.0" defer></script>
+    <script src="<?php echo BASE_URL; ?>/js/hero-feed.js?v=1.0" defer></script>
 </body>
 </html>

@@ -72,22 +72,22 @@ try {
                 </div>
                 <div class="ticker-viewport" role="region" aria-label="Live order distribution by category">
                     <ul class="ticker-track" id="ticker">
-                        <li class="ticker-item">
+                        <li class="ticker-item" id="row-cases">
                             <span class="hero-card-pill" style="--c:#00d4aa">Cases</span>
                             <span class="hero-card-bar"><span style="width:86%"></span></span>
                             <span class="hero-card-val">2,400</span>
                         </li>
-                        <li class="ticker-item">
+                        <li class="ticker-item" id="row-chargers">
                             <span class="hero-card-pill" style="--c:#7c3aed">Chargers</span>
                             <span class="hero-card-bar"><span style="width:64%"></span></span>
                             <span class="hero-card-val">1,820</span>
                         </li>
-                        <li class="ticker-item">
+                        <li class="ticker-item" id="row-earphones">
                             <span class="hero-card-pill" style="--c:#f59e0b">Earphones</span>
                             <span class="hero-card-bar"><span style="width:48%"></span></span>
                             <span class="hero-card-val">1,310</span>
                         </li>
-                        <li class="ticker-item">
+                        <li class="ticker-item" id="row-power">
                             <span class="hero-card-pill" style="--c:#ef4444">Power</span>
                             <span class="hero-card-bar"><span style="width:32%"></span></span>
                             <span class="hero-card-val">910</span>
