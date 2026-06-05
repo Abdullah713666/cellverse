@@ -8,6 +8,6 @@ COPY . /app
 
 EXPOSE 8080
 
-# ENTRYPOINT (not CMD) so Railway doesn't override it
-# Explicit sh -c will expand $PORT before running PHP
-ENTRYPOINT ["sh", "-c", "exec php -S 0.0.0.0:${PORT:-8080} -t ."]
+# Shell form CMD: /bin/sh -c "..." expands $PORT before exec'ing php
+# This is what Railway/RAILPACK will run when RAILPACK_BUILDER=DOCKER
+CMD php -S 0.0.0.0:${PORT:-8080} -t .
