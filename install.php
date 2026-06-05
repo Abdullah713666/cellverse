@@ -13,10 +13,11 @@ $success = '';
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $host = $_POST['host'] ?? 'localhost';
-    $dbname = $_POST['dbname'] ?? 'cellverse_db';
-    $username = $_POST['username'] ?? 'root';
-    $password = $_POST['password'] ?? '';
+    // Allow auto-fill from Railway / production env vars
+    $host = $_POST['host'] ?? getenv('MYSQLHOST') ?: 'localhost';
+    $dbname = $_POST['dbname'] ?? getenv('MYSQLDATABASE') ?: 'cellverse_db';
+    $username = $_POST['username'] ?? getenv('MYSQLUSER') ?: 'root';
+    $password = $_POST['password'] ?? getenv('MYSQLPASSWORD') ?: '';
 
     try {
         // Connect to MySQL without selecting database
@@ -158,6 +159,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="installer">
         <h1>CellVerse Installer</h1>
         <p class="subtitle">Set up your database to get started</p>
+        <?php if (getenv('MYSQLHOST')): ?>
+        <div style="background:rgba(0,212,170,0.1);border:1px solid #00d4aa;color:#00d4aa;padding:10px;border-radius:8px;margin-bottom:16px;font-size:13px;">
+            Production env vars detected (Railway). Just click <strong>Install Database</strong> — fields are pre-filled.
+        </div>
+        <?php endif; ?>
 
         <?php if ($success): ?>
             <div class="success"><?php echo $success; ?></div>
@@ -178,19 +184,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <form method="POST">
                 <div class="form-group">
                     <label>Database Host</label>
-                    <input type="text" name="host" value="localhost" required>
+                    <input type="text" name="host" value="<?php echo htmlspecialchars(getenv('MYSQLHOST') ?: 'localhost'); ?>" required>
                 </div>
                 <div class="form-group">
                     <label>Database Name</label>
-                    <input type="text" name="dbname" value="cellverse_db" required>
+                    <input type="text" name="dbname" value="<?php echo htmlspecialchars(getenv('MYSQLDATABASE') ?: 'cellverse_db'); ?>" required>
                 </div>
                 <div class="form-group">
                     <label>Database Username</label>
-                    <input type="text" name="username" value="root" required>
+                    <input type="text" name="username" value="<?php echo htmlspecialchars(getenv('MYSQLUSER') ?: 'root'); ?>" required>
                 </div>
                 <div class="form-group">
                     <label>Database Password</label>
-                    <input type="password" name="password" value="">
+                    <input type="password" name="password" value="<?php echo htmlspecialchars(getenv('MYSQLPASSWORD') ?: ''); ?>">
                 </div>
                 <button type="submit">Install Database</button>
             </form>
