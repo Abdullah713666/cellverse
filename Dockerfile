@@ -8,5 +8,5 @@ COPY . /app
 
 EXPOSE 8080
 
-# Use shell form so $PORT is expanded; Railway sets PORT automatically
+# Shell form allows $PORT expansion
 CMD php -S 0.0.0.0:${PORT:-8080} -t .
