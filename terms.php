@@ -4,21 +4,15 @@ $page_description = 'CellVerse terms of service for wholesale mobile accessory o
 require_once 'includes/header.php';
 ?>
 
-<div class="page-hero">
-    <div class="grid-overlay"></div>
-    <div class="hero-orb hero-orb--a"></div>
-    <div class="hero-orb hero-orb--b"></div>
+<section class="section" style="padding-bottom:0;">
     <div class="container">
-        <div class="page-hero-content">
-            <span class="kicker kicker--center">Legal</span>
-            <h1 class="hero-line">
-                <span class="hero-word">Terms</span>
-                <span class="hero-word hero-word--accent">of Service.</span>
-            </h1>
-            <p class="page-hero-sub">Plain English terms for wholesale orders. Last updated: <?php echo date('F j, Y'); ?>.</p>
+        <div style="max-width:800px;">
+            <span class="kicker" data-reveal>Legal</span>
+            <h1 data-reveal>Terms of Service.</h1>
+            <p data-reveal style="font-size:var(--text-lg);color:var(--text-secondary);">Plain English terms for wholesale orders. Last updated: <?php echo date('F j, Y'); ?>.</p>
         </div>
     </div>
-</div>
+</section>
 
 <section class="section">
     <div class="container" style="max-width: 760px;">
@@ -48,7 +42,7 @@ require_once 'includes/header.php';
             <p>These terms are governed by the laws of Pakistan. Disputes will first be referred to mediation in Lahore; failing resolution within 30 days, the dispute will be resolved in the courts of Lahore. If any provision of these terms is held invalid, the remaining provisions continue in full force.</p>
 
             <h2 class="section-title">9. Contact</h2>
-            <p>Questions about these terms? Email <a href="mailto:legal@cellverse.pk">legal@cellverse.pk</a> or call +92 300 1234567 during business hours (Mon-Sat, 9am-7pm PKT). Our postal address is Shop 12, Tech Market, Main Boulevard, Lahore, Pakistan.</p>
+            <p>Questions about these terms? Call +92 326 0482636 during business hours (Mon-Sat, 9am-7pm PKT).</p>
         </div>
     </div>
 </section>

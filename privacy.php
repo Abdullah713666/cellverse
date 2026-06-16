@@ -4,21 +4,15 @@ $page_description = 'CellVerse privacy policy: how we collect, store, and protec
 require_once 'includes/header.php';
 ?>
 
-<div class="page-hero">
-    <div class="grid-overlay"></div>
-    <div class="hero-orb hero-orb--a"></div>
-    <div class="hero-orb hero-orb--b"></div>
+<section class="section" style="padding-bottom:0;">
     <div class="container">
-        <div class="page-hero-content">
-            <span class="kicker kicker--center">Legal</span>
-            <h1 class="hero-line">
-                <span class="hero-word">Privacy</span>
-                <span class="hero-word hero-word--accent">Policy.</span>
-            </h1>
-            <p class="page-hero-sub">Last updated: <?php echo date('F j, Y'); ?>. We keep this short and readable.</p>
+        <div style="max-width:800px;">
+            <span class="kicker" data-reveal>Legal</span>
+            <h1 data-reveal>Privacy Policy.</h1>
+            <p data-reveal style="font-size:var(--text-lg);color:var(--text-secondary);">Last updated: <?php echo date('F j, Y'); ?>. We keep this short and readable.</p>
         </div>
     </div>
-</div>
+</section>
 
 <section class="section">
     <div class="container" style="max-width: 760px;">
@@ -42,7 +36,7 @@ require_once 'includes/header.php';
             <p>We use a small number of first-party cookies to remember your shopping list and preferred currency. We do not use any third-party tracking or advertising cookies. You can clear cookies at any time through your browser settings without losing access to the site.</p>
 
             <h2 class="section-title">Contact</h2>
-            <p>Questions? Email <a href="mailto:privacy@cellverse.pk">privacy@cellverse.pk</a> or call +92 300 1234567 during business hours (Mon-Sat, 9am-7pm PKT). Our postal address is Shop 12, Tech Market, Main Boulevard, Lahore, Pakistan.</p>
+            <p>Questions? Call +92 326 0482636 during business hours (Mon-Sat, 9am-7pm PKT).</p>
         </div>
     </div>
 </section>

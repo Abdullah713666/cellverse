@@ -34,6 +34,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajax'])) {
     $wordCount = str_word_count($message);
     if ($wordCount > 250) $errors[] = 'Message must be under 250 words';
 
+    if (!verifyRecaptcha($_POST['g-recaptcha-response'] ?? '')) {
+        $errors[] = 'Please complete the CAPTCHA verification';
+    }
+
     if (!empty($errors)) {
         echo json_encode(['success' => false, 'message' => implode(', ', $errors)]);
         exit;
@@ -54,32 +58,22 @@ require_once 'includes/header.php';
 
 $map_lat = getSetting('map_latitude', '31.5204');
 $map_lon = getSetting('map_longitude', '74.3587');
+$map_embed_url = getSetting('map_embed_url', '');
+if ($map_embed_url === '') {
+    $map_embed_url = "https://www.openstreetmap.org/export/embed.html?bbox=" . ($map_lon - 0.01) . "%2C" . ($map_lat - 0.01) . "%2C" . ($map_lon + 0.01) . "%2C" . ($map_lat + 0.01) . "&layer=mapnik&marker=" . $map_lat . "%2C" . $map_lon;
+}
+$recaptcha_site_key = getRecaptchaSiteKey();
 ?>
 
-<div class="page-hero">
-    <div class="grid-overlay"></div>
-    <div class="hero-orb hero-orb--a"></div>
-    <div class="hero-orb hero-orb--b"></div>
+<section class="section" style="padding-bottom:0;">
     <div class="container">
-        <div class="page-hero-content">
-                            <span class="kicker kicker--center">Get in touch</span>
-            <h1 class="hero-line">
-                <span class="hero-word">Let's</span>
-                <span class="hero-word">Talk</span>
-                <span class="hero-word hero-word--accent">Wholesale.</span>
-            </h1>
-            <p class="page-hero-sub">Questions, quotes, custom catalogs, or just a quick sanity check — we answer every message within one business day.</p>
+        <div style="max-width:800px;">
+            <span class="kicker">Get in touch</span>
+            <h1 data-reveal>Let's Talk Wholesale.</h1>
+            <p style="font-size:var(--text-lg);color:var(--text-secondary);">Questions, quotes, custom catalogs, or just a quick sanity check — we answer every message within one business day.</p>
         </div>
     </div>
-    <div class="page-hero-variant page-hero-variant--contact fade-up" aria-hidden="true">
-        <div class="pulse-rings">
-            <div class="pulse-ring"></div>
-            <div class="pulse-ring pulse-ring--b"></div>
-            <div class="pulse-ring pulse-ring--c"></div>
-            <div class="pulse-center"></div>
-        </div>
-    </div>
-</div>
+</section>
 
 <section class="section">
     <div class="container">
@@ -120,7 +114,13 @@ $map_lon = getSetting('map_longitude', '74.3587');
                         <textarea id="message" name="message" rows="5" required maxlength="5000" placeholder="Tell us about your inquiry..."></textarea>
                     </div>
 
-                    <button type="submit" class="btn btn-primary magnetic" style="width:100%;">Send Message <span class="btn-arrow">&rarr;</span></button>
+                    <?php if ($recaptcha_site_key): ?>
+                    <div class="form-group" style="margin-bottom:var(--spacing-md);">
+                        <div class="g-recaptcha" data-sitekey="<?php echo htmlspecialchars($recaptcha_site_key); ?>" data-theme="<?php echo (isset($_COOKIE['cellverse-theme']) && $_COOKIE['cellverse-theme'] === 'dark') ? 'dark' : 'light'; ?>"></div>
+                    </div>
+                    <?php endif; ?>
+
+                    <button type="submit" class="btn btn-primary" style="width:100%;">Send Message <span class="btn-arrow">&rarr;</span></button>
                 </form>
             </div>
 
@@ -131,16 +131,6 @@ $map_lon = getSetting('map_longitude', '74.3587');
                 </div>
                 <div class="contact-info-card">
                     <div class="contact-info-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    </div>
-                    <div>
-                        <h4>Visit Us</h4>
-                        <p><?php echo htmlspecialchars(getSetting('contact_address', 'Shop 12, Tech Market, Main Boulevard, Lahore, Pakistan')); ?></p>
-                    </div>
-                </div>
-
-                <div class="contact-info-card">
-                    <div class="contact-info-icon">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>
                     </div>
                     <div>
@@ -149,18 +139,8 @@ $map_lon = getSetting('map_longitude', '74.3587');
                     </div>
                 </div>
 
-                <div class="contact-info-card">
-                    <div class="contact-info-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                    </div>
-                    <div>
-                        <h4>Email Us</h4>
-                        <p><?php echo htmlspecialchars(getSetting('contact_email', 'info@cellverse.pk')); ?></p>
-                    </div>
-                </div>
-
                 <div class="map-container">
-                    <iframe width="600" height="250" src="https://www.openstreetmap.org/export/embed.html?bbox=<?php echo $map_lon - 0.01; ?>%2C<?php echo $map_lat - 0.01; ?>%2C<?php echo $map_lon + 0.01; ?>%2C<?php echo $map_lat + 0.01; ?>&layer=mapnik&marker=<?php echo $map_lat; ?>%2C<?php echo $map_lon; ?>" loading="lazy" title="Office location map" style="border:0;"></iframe>
+                    <iframe width="600" height="400" src="<?php echo htmlspecialchars($map_embed_url); ?>" loading="lazy" title="Office location map" style="border:0;" referrerpolicy="no-referrer"></iframe>
                     <div class="map-overlay" aria-hidden="true">
                         <svg viewBox="0 0 200 120" preserveAspectRatio="none">
                             <defs>
@@ -193,22 +173,22 @@ $map_lon = getSetting('map_longitude', '74.3587');
             <div class="bulk-process-step">
                 <div class="step-badge step-badge--teal">01</div>
                 <h3>Send your inquiry</h3>
-                <p>Use the form, call our wholesale desk, or message us on WhatsApp. Include product list, target quantities, and your delivery city for the fastest response.</p>
+                <p>Use the form, call us, or message on WhatsApp with your product list and delivery city.</p>
             </div>
             <div class="bulk-process-step">
                 <div class="step-badge step-badge--purple">02</div>
                 <h3>Receive a tailored quote</h3>
-                <p>Within 24 hours our team replies with current stock, tiered pricing, MOQ, and freight options. We also flag substitutes when originals are out of stock.</p>
+                <p>Within 24 hours we reply with stock, tiered pricing, and freight options.</p>
             </div>
             <div class="bulk-process-step">
                 <div class="step-badge step-badge--amber">03</div>
                 <h3>Confirm and pay</h3>
-                <p>Once you confirm the order, we send a proforma invoice with secure payment options: bank transfer, cheque, or Letter of Credit for larger accounts.</p>
+                <p>Approve the pricing and settle via bank transfer, cheque, or Letter of Credit.</p>
             </div>
             <div class="bulk-process-step">
                 <div class="step-badge step-badge--teal">04</div>
                 <h3>Stock and ship</h3>
-                <p>We hold inventory for confirmed orders, QC every unit, pack to your spec, and dispatch within 48 hours. Tracking is shared the moment your shipment leaves our warehouse.</p>
+                <p>We QC every unit, pack to spec, and dispatch within 48 hours with tracking.</p>
             </div>
         </div>
     </div>
@@ -217,17 +197,21 @@ $map_lon = getSetting('map_longitude', '74.3587');
 <section class="section">
     <div class="container">
         <div class="cta-banner">
-            <span class="cta-orb cta-orb--a"></span>
-            <span class="cta-orb cta-orb--b"></span>
-            <span class="kicker kicker--center">In a hurry</span>
+            <span class="kicker" style="color:var(--accent-gold-bright);">In a hurry</span>
             <h2>Skip the form. Request a quote.</h2>
             <p>For volume pricing, custom catalogs, and stock holds, jump straight to our bulk order desk.</p>
             <div class="cta-actions">
-                <a href="bulk-order.php" class="btn btn-primary btn-lg magnetic">Open Bulk Order <span class="btn-arrow">&rarr;</span></a>
-                <a href="faq.php" class="btn btn-ghost btn-lg magnetic">Read the FAQ</a>
+                <a href="bulk-order.php" class="btn btn-primary btn-lg btn-arrow">
+                    <span>Open Bulk Order</span>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3l5 5-5 5"/></svg>
+                </a>
+                <a href="faq.php" class="btn btn-ghost btn-lg">Read the FAQ</a>
             </div>
         </div>
     </div>
 </section>
 
+<?php if ($recaptcha_site_key): ?>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<?php endif; ?>
 <?php require_once 'includes/footer.php'; ?>

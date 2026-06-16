@@ -4,37 +4,15 @@ $page_description = 'CellVerse is Pakistan\'s trusted wholesale supplier of prem
 require_once 'includes/header.php';
 ?>
 
-<div class="page-hero">
-    <div class="grid-overlay"></div>
-    <div class="hero-orb hero-orb--a"></div>
-    <div class="hero-orb hero-orb--b"></div>
+<section class="section" style="padding-bottom:0;">
     <div class="container">
-        <div class="page-hero-content">
-            <span class="kicker kicker--center">Our Story</span>
-            <h1 class="hero-line">
-                <span class="hero-word">Pakistan's</span>
-                <span class="hero-word">Leading</span>
-                <span class="hero-word hero-word--accent">Wholesale</span>
-                <span class="hero-word">Supplier.</span>
-            </h1>
-            <p class="page-hero-sub">A decade of trust, an ocean of inventory, and a single mission: making wholesale mobile accessories effortless for businesses that scale.</p>
-            <div class="page-hero-cta">
-                <a href="bulk-order.php" class="btn btn-primary magnetic">Start Your Order <span class="btn-arrow">&rarr;</span></a>
-                <a href="products.php" class="btn btn-ghost magnetic">Browse Catalog</a>
-            </div>
+        <div style="max-width:960px;">
+            <span class="kicker">Our Story</span>
+            <h1 data-reveal>Pakistan's Leading Wholesale Supplier.</h1>
+            <p style="font-size:var(--text-lg);color:var(--text-secondary);">A decade of trust, an ocean of inventory, and a single mission: making wholesale mobile accessories effortless for businesses that scale.</p>
         </div>
     </div>
-    <div class="page-hero-variant page-hero-variant--about fade-up" aria-hidden="true">
-        <svg class="ribbon" viewBox="0 0 320 120" fill="none" aria-hidden="true">
-            <path d="M 20 60 Q 80 20, 160 60 T 300 60" />
-            <circle class="ribbon-dot" cx="20" cy="60" r="5" />
-            <circle class="ribbon-dot" cx="100" cy="36" r="4" />
-            <circle class="ribbon-dot" cx="160" cy="60" r="5" />
-            <circle class="ribbon-dot" cx="220" cy="84" r="4" />
-            <circle class="ribbon-dot" cx="300" cy="60" r="5" />
-        </svg>
-    </div>
-</div>
+</section>
 
 <section class="section">
     <div class="container">
@@ -196,14 +174,15 @@ require_once 'includes/header.php';
 <section class="section">
     <div class="container">
         <div class="cta-banner">
-            <span class="cta-orb cta-orb--a"></span>
-            <span class="cta-orb cta-orb--b"></span>
-            <span class="kicker kicker--center">Ready when you are</span>
+            <span class="kicker" style="color:var(--accent-gold-bright);">Ready when you are</span>
             <h2>Ready to Partner With Us?</h2>
             <p>Join 2,000+ businesses across Pakistan that source their accessories the smart way.</p>
             <div class="cta-actions">
-                <a href="bulk-order.php" class="btn btn-primary btn-lg magnetic">Get Started Today <span class="btn-arrow">&rarr;</span></a>
-                <a href="contact.php" class="btn btn-ghost btn-lg magnetic">Talk to a Specialist</a>
+                <a href="bulk-order.php" class="btn btn-primary btn-lg btn-arrow">
+                    <span>Get Started Today</span>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3l5 5-5 5"/></svg>
+                </a>
+                <a href="contact.php" class="btn btn-ghost btn-lg">Talk to a Specialist</a>
             </div>
         </div>
     </div>

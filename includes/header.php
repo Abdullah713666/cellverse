@@ -16,7 +16,7 @@ $absolute_og_image = $absolute_base . $page_image;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#0a0f1a">
+    <meta name="theme-color" content="#fafaf8">
     <meta name="format-detection" content="telephone=no">
     <title><?php echo htmlspecialchars($page_title, ENT_QUOTES, 'UTF-8'); ?></title>
     <meta name="description" content="<?php echo htmlspecialchars($page_description, ENT_QUOTES, 'UTF-8'); ?>">
@@ -42,12 +42,27 @@ $absolute_og_image = $absolute_base . $page_image;
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/style.css?v=2.0">
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/sprint1.css?v=2.0">
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/hero-stats.css?v=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/tokens.css?v=3.0">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/base.css?v=3.0">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/components.css?v=3.0">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/layout.css?v=3.0">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/animations.css?v=3.0">
+    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/responsive.css?v=3.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
-    <noscript><style>body.is-loading .page-curtain { display: none; }</style></noscript>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js" defer></script>
+    <script>
+    (function() {
+      var theme = localStorage.getItem('cellverse-theme');
+      if (theme === 'dark') {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else if (!theme) {
+        document.documentElement.removeAttribute('data-theme');
+      }
+    })();
+    </script>
+    <noscript><style>.page-curtain { display: none; }</style></noscript>
 
     <?php if (empty($page_robots) || strpos($page_robots, 'noindex') === false): ?>
     <script type="application/ld+json">
@@ -58,17 +73,10 @@ $absolute_og_image = $absolute_base . $page_image;
         "url": "<?php echo $absolute_base . BASE_URL . '/'; ?>",
         "logo": "<?php echo $absolute_base . BASE_URL; ?>/images/logo.svg",
         "description": "Pakistan's leading wholesale supplier of premium mobile accessories.",
-        "address": {
-            "@type": "PostalAddress",
-            "streetAddress": "Shop 12, Tech Market",
-            "addressLocality": "Lahore",
-            "addressCountry": "PK"
-        },
         "contactPoint": {
             "@type": "ContactPoint",
-            "telephone": "+92-300-1234567",
-            "contactType": "sales",
-            "email": "info@cellverse.pk"
+            "telephone": "+92-326-0482636",
+            "contactType": "sales"
         }
     }
     </script>
@@ -83,10 +91,11 @@ $absolute_og_image = $absolute_base . $page_image;
         <div class="container header-inner">
             <a href="<?php echo BASE_URL; ?>/" class="logo" aria-label="CellVerse home">
                 <svg class="logo-icon" width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-                    <rect x="8" y="2" width="16" height="28" rx="3" stroke="currentColor" stroke-width="2"/>
-                    <circle cx="16" cy="26" r="2" fill="currentColor"/>
-                    <rect x="12" y="6" width="8" height="14" rx="1" fill="currentColor" opacity="0.3"/>
-                    <path d="M10 24h12" stroke="currentColor" stroke-width="1.5"/>
+                    <rect x="10" y="6" width="12" height="20" rx="2.5" stroke="currentColor" stroke-width="1.8" fill="none"/>
+                    <circle cx="16" cy="23" r="1.5" fill="currentColor"/>
+                    <path d="M24 11 Q27.5 16 24 21" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"/>
+                    <path d="M26.5 9 Q31 16 26.5 23" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.5"/>
+                    <path d="M29 7 Q34.5 16 29 25" stroke="currentColor" stroke-width="1" stroke-linecap="round" fill="none" opacity="0.3"/>
                 </svg>
                 <span class="logo-text">Cell<span class="logo-accent">Verse</span></span>
             </a>
@@ -101,7 +110,11 @@ $absolute_og_image = $absolute_base . $page_image;
             </nav>
 
             <div class="header-actions">
-                <a href="<?php echo BASE_URL; ?>/bulk-order.php" class="btn btn-primary btn-sm pulse-glow">Get Quote</a>
+                <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                    <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                    <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+                </button>
+                <a href="<?php echo BASE_URL; ?>/bulk-order.php" class="btn btn-primary btn-sm">Get Quote</a>
                 <button class="hamburger" id="hamburgerBtn" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobileNav">
                     <span></span>
                     <span></span>

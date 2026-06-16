@@ -89,39 +89,15 @@ $success = '';
 $error = '';
 ?>
 
-<div class="page-hero">
-    <div class="grid-overlay"></div>
-    <div class="hero-orb hero-orb--a"></div>
-    <div class="hero-orb hero-orb--b"></div>
+<section class="section" style="padding-bottom:0;">
     <div class="container">
-        <div class="page-hero-content">
-            <span class="kicker kicker--center">Bulk Order</span>
-            <h1 class="hero-line">
-                <span class="hero-word">Stock</span>
-                <span class="hero-word">Your</span>
-                <span class="hero-word hero-word--accent">Shelves.</span>
-            </h1>
-            <p class="page-hero-sub">Send one request, get a tailored reply with pricing, delivery window, and stock holds within a business day.</p>
+        <div style="max-width:800px;">
+            <span class="kicker">Bulk Order</span>
+            <h1 data-reveal>Stock Your Shelves.</h1>
+            <p style="font-size:var(--text-lg);color:var(--text-secondary);">Send one request, get a tailored reply with pricing, delivery window, and stock holds within a business day.</p>
         </div>
     </div>
-    <div class="page-hero-variant page-hero-variant--bulk fade-up" aria-hidden="true">
-        <div class="bulk-chip bulk-chip--a">
-            <div class="chip-thumb"></div>
-            <div class="chip-line chip-line--name"></div>
-            <div class="chip-line chip-line--price"></div>
-        </div>
-        <div class="bulk-chip bulk-chip--b">
-            <div class="chip-thumb"></div>
-            <div class="chip-line chip-line--name"></div>
-            <div class="chip-line chip-line--price"></div>
-        </div>
-        <div class="bulk-chip bulk-chip--c">
-            <div class="chip-thumb"></div>
-            <div class="chip-line chip-line--name"></div>
-            <div class="chip-line chip-line--price"></div>
-        </div>
-    </div>
-</div>
+</section>
 
 <section class="section">
     <div class="container">
@@ -235,7 +211,7 @@ $error = '';
                     <textarea id="notes" name="notes" rows="3" maxlength="2000" placeholder="Any special requirements or questions..."></textarea>
                 </div>
 
-                <button type="submit" class="btn btn-primary btn-lg magnetic" style="width:100%;">Submit Bulk Order Request <span class="btn-arrow">&rarr;</span></button>
+                <button type="submit" class="btn btn-primary btn-lg" style="width:100%;">Submit Bulk Order Request <span class="btn-arrow">&rarr;</span></button>
             </form>
         </div>
     </div>
@@ -244,14 +220,15 @@ $error = '';
 <section class="section">
     <div class="container">
         <div class="cta-banner">
-            <span class="cta-orb cta-orb--a"></span>
-            <span class="cta-orb cta-orb--b"></span>
-            <span class="kicker kicker--center">Prefer to talk</span>
+            <span class="kicker" style="color:var(--accent-gold-bright);">Prefer to talk</span>
             <h2>Have a custom catalog requirement?</h2>
             <p>For multi-product bundles, custom branding, or recurring weekly orders, our team is happy to scope it with you.</p>
             <div class="cta-actions">
-                <a href="contact.php" class="btn btn-primary btn-lg magnetic">Talk to Wholesale <span class="btn-arrow">&rarr;</span></a>
-                <a href="products.php" class="btn btn-ghost btn-lg magnetic">Browse Catalog</a>
+                <a href="contact.php" class="btn btn-primary btn-lg btn-arrow">
+                    <span>Talk to Wholesale</span>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3l5 5-5 5"/></svg>
+                </a>
+                <a href="products.php" class="btn btn-ghost btn-lg">Browse Catalog</a>
             </div>
         </div>
     </div>

@@ -1,0 +1,108 @@
+.page-curtain {
+  position: fixed;
+  inset: 0;
+  background: var(--accent-navy);
+  z-index: var(--z-curtain);
+  pointer-events: none;
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 0.55s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+body.is-loading .page-curtain {
+  transform: scaleX(1);
+}
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s var(--ease-out-expo),
+              transform 0.6s var(--ease-out-expo);
+}
+
+[data-reveal].revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+[data-reveal][data-reveal-delay="1"] { transition-delay: 0.05s; }
+[data-reveal][data-reveal-delay="2"] { transition-delay: 0.1s; }
+[data-reveal][data-reveal-delay="3"] { transition-delay: 0.15s; }
+[data-reveal][data-reveal-delay="4"] { transition-delay: 0.2s; }
+[data-reveal][data-reveal-delay="5"] { transition-delay: 0.25s; }
+[data-reveal][data-reveal-delay="6"] { transition-delay: 0.3s; }
+[data-reveal][data-reveal-delay="7"] { transition-delay: 0.35s; }
+[data-reveal][data-reveal-delay="8"] { transition-delay: 0.4s; }
+[data-reveal][data-reveal-delay="9"] { transition-delay: 0.45s; }
+
+.stagger-fade > * {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.5s var(--ease-out-expo),
+              transform 0.5s var(--ease-out-expo);
+}
+
+.stagger-fade.revealed > *:nth-child(1) { transition-delay: 0s; }
+.stagger-fade.revealed > *:nth-child(2) { transition-delay: 0.08s; }
+.stagger-fade.revealed > *:nth-child(3) { transition-delay: 0.16s; }
+.stagger-fade.revealed > *:nth-child(4) { transition-delay: 0.24s; }
+.stagger-fade.revealed > *:nth-child(5) { transition-delay: 0.32s; }
+.stagger-fade.revealed > *:nth-child(6) { transition-delay: 0.4s; }
+.stagger-fade.revealed > *:nth-child(7) { transition-delay: 0.48s; }
+.stagger-fade.revealed > *:nth-child(8) { transition-delay: 0.56s; }
+
+.stagger-fade.revealed > *,
+[data-reveal].revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hero-section {
+  position: relative;
+}
+
+.hero-cable {
+  transition: stroke 0.4s ease;
+}
+
+#heroCanvas {
+  transition: opacity 0.4s ease;
+}
+
+.char-span {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+.grid-auto,
+.grid-3,
+.grid-4,
+.stats-grid,
+.values-grid,
+.bulk-process,
+.contact-paths {
+  transform-style: preserve-3d;
+}
+
+.product-card,
+.step-card,
+.value-card,
+.bulk-process-step,
+.stat-card,
+.contact-info-card {
+  will-change: transform, opacity;
+}
+
+.scroll-cable-svg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.35;
+}
+
+.scroll-cable-connector {
+  transition: fill 0.4s ease;
+}

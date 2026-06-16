@@ -18,27 +18,15 @@ foreach ($faqs as $faq) {
 }
 ?>
 
-<div class="page-hero">
-    <div class="grid-overlay"></div>
-    <div class="hero-orb hero-orb--a"></div>
-    <div class="hero-orb hero-orb--b"></div>
+<section class="section" style="padding-bottom:0;">
     <div class="container">
-        <div class="page-hero-content">
-            <span class="kicker kicker--center">Help Center</span>
-            <h1 class="hero-line">
-                <span class="hero-word">Common</span>
-                <span class="hero-word">Questions,</span>
-                <span class="hero-word hero-word--accent">Answered.</span>
-            </h1>
-            <p class="page-hero-sub">Search by keyword or browse by topic. Can't find what you need? Our team is one click away.</p>
+        <div style="max-width:800px;">
+            <span class="kicker">Help Center</span>
+            <h1 data-reveal>Common Questions, Answered.</h1>
+            <p style="font-size:var(--text-lg);color:var(--text-secondary);">Search by keyword or browse by topic. Can't find what you need? Our team is one click away.</p>
         </div>
     </div>
-    <div class="page-hero-variant page-hero-variant--faq fade-up" aria-hidden="true">
-        <span class="floating-q floating-q--a">?</span>
-        <span class="floating-q floating-q--b">?</span>
-        <span class="floating-q floating-q--c">?</span>
-    </div>
-</div>
+</section>
 
 <section class="section">
     <div class="container">
@@ -83,14 +71,15 @@ foreach ($faqs as $faq) {
 <section class="section">
     <div class="container">
         <div class="cta-banner">
-            <span class="cta-orb cta-orb--a"></span>
-            <span class="cta-orb cta-orb--b"></span>
-            <span class="kicker kicker--center">Still curious</span>
+            <span class="kicker" style="color:var(--accent-gold-bright);">Still curious</span>
             <h2>Still Have Questions?</h2>
             <p>Our team is here to help. Reach out and we'll get back to you quickly.</p>
             <div class="cta-actions">
-                <a href="contact.php" class="btn btn-primary btn-lg magnetic">Contact Us <span class="btn-arrow">&rarr;</span></a>
-                <a href="bulk-order.php" class="btn btn-ghost btn-lg magnetic">Request a Quote</a>
+                <a href="contact.php" class="btn btn-primary btn-lg btn-arrow">
+                    <span>Contact Us</span>
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3l5 5-5 5"/></svg>
+                </a>
+                <a href="bulk-order.php" class="btn btn-ghost btn-lg">Request a Quote</a>
             </div>
         </div>
     </div>

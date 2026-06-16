@@ -28,7 +28,7 @@ function getDB() {
                 PDO::ATTR_EMULATE_PREPARES => false,
             ]);
         } catch (PDOException $e) {
-            die("Database connection failed. Please run install.php to set up the database.");
+            return null;
         }
     }
     return $pdo;
@@ -126,4 +126,61 @@ function validate_phone($phone) {
 function clamp_int($value, $min = 0, $max = PHP_INT_MAX) {
     $n = is_numeric($value) ? (int)$value : $min;
     return max($min, min($max, $n));
+}
+
+// ── reCAPTCHA v2 helpers ──────────────────────────────────────────────
+
+// Google reCAPTCHA v2 test keys (work on localhost only)
+define('RECAPTCHA_TEST_SITE_KEY', '6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI');
+define('RECAPTCHA_TEST_SECRET',   '6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe');
+
+function getRecaptchaSiteKey() {
+    $db = getDB();
+    $val = getSetting('recaptcha_site_key', '');
+    if ($val !== '') return $val;
+    // Fallback: env var, then test key on localhost
+    $env = getenv('RECAPTCHA_SITE_KEY');
+    if ($env !== false && $env !== '') return $env;
+    $host = $_SERVER['HTTP_HOST'] ?? '';
+    if ($host === 'localhost' || $host === '127.0.0.1' || str_starts_with($host, 'localhost:')) {
+        return RECAPTCHA_TEST_SITE_KEY;
+    }
+    return '';
+}
+
+function getRecaptchaSecretKey() {
+    $db = getDB();
+    $val = getSetting('recaptcha_secret_key', '');
+    if ($val !== '') return $val;
+    $env = getenv('RECAPTCHA_SECRET_KEY');
+    if ($env !== false && $env !== '') return $env;
+    $host = $_SERVER['HTTP_HOST'] ?? '';
+    if ($host === 'localhost' || $host === '127.0.0.1' || str_starts_with($host, 'localhost:')) {
+        return RECAPTCHA_TEST_SECRET;
+    }
+    return '';
+}
+
+function verifyRecaptcha($response) {
+    $secret = getRecaptchaSecretKey();
+    if ($secret === '' || $secret === RECAPTCHA_TEST_SECRET) {
+        // No real key configured — skip verification (dev/test mode)
+        return true;
+    }
+    if (empty($response)) return false;
+
+    $ch = curl_init('https://www.google.com/recaptcha/api/siteverify');
+    curl_setopt_array($ch, [
+        CURLOPT_POST           => true,
+        CURLOPT_POSTFIELDS     => http_build_query(['secret' => $secret, 'response' => $response, 'remoteip' => $_SERVER['REMOTE_ADDR'] ?? '']),
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_TIMEOUT        => 5,
+        CURLOPT_SSL_VERIFYPEER => true,
+    ]);
+    $body = curl_exec($ch);
+    curl_close($ch);
+
+    if ($body === false) return false;
+    $json = json_decode($body, true);
+    return isset($json['success']) && $json['success'] === true;
 }

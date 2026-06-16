@@ -8,6 +8,11 @@ COPY . /app
 
 EXPOSE 8080
 
-# Shell form CMD: /bin/sh -c "..." expands $PORT before exec'ing php
-# This is what Railway/RAILPACK will run when RAILPACK_BUILDER=DOCKER
-CMD php -S 0.0.0.0:${PORT:-8080} -t .
+# Copy entry script and make it executable.
+# Using a script file prevents RAILPACK from inlining/parsing the shell expansion.
+COPY start.sh /start.sh
+RUN chmod +x /start.sh
+
+# Exec form ENTRYPOINT: RAILPACK will run exactly [/start.sh] with no shell parsing.
+# /start.sh uses /bin/sh internally to expand $PORT.
+ENTRYPOINT ["/start.sh"]
