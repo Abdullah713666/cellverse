@@ -4,6 +4,27 @@
  */
 require_once __DIR__ . '/../config/init.php';
 
+function tableExists($tableName) {
+    static $cache = [];
+    if (isset($cache[$tableName])) return $cache[$tableName];
+    $db = getDB();
+    $stmt = $db->prepare("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = ?");
+    $stmt->execute([$tableName]);
+    $cache[$tableName] = (int)$stmt->fetchColumn() > 0;
+    return $cache[$tableName];
+}
+
+function columnExists($tableName, $columnName) {
+    $key = $tableName . '.' . $columnName;
+    static $cache = [];
+    if (isset($cache[$key])) return $cache[$key];
+    $db = getDB();
+    $stmt = $db->prepare("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = ? AND column_name = ?");
+    $stmt->execute([$tableName, $columnName]);
+    $cache[$key] = (int)$stmt->fetchColumn() > 0;
+    return $cache[$key];
+}
+
 function isLoggedIn() {
     return isset($_SESSION['admin_id']) && isset($_SESSION['admin_username']);
 }
@@ -50,6 +71,7 @@ function isSuperAdmin() {
 }
 
 function getLoginAttempts($username, $ipAddress) {
+    if (!tableExists('login_attempts')) return 0;
     $db = getDB();
     $stmt = $db->prepare("SELECT COUNT(*) FROM login_attempts WHERE username = ? AND ip_address = ? AND attempted_at > DATE_SUB(NOW(), INTERVAL 15 MINUTE)");
     $stmt->execute([$username, $ipAddress]);
@@ -57,18 +79,21 @@ function getLoginAttempts($username, $ipAddress) {
 }
 
 function recordLoginAttempt($username, $ipAddress) {
+    if (!tableExists('login_attempts')) return;
     $db = getDB();
     $stmt = $db->prepare("INSERT INTO login_attempts (username, ip_address, attempted_at) VALUES (?, ?, NOW())");
     $stmt->execute([$username, $ipAddress]);
 }
 
 function clearLoginAttempts($username, $ipAddress) {
+    if (!tableExists('login_attempts')) return;
     $db = getDB();
     $stmt = $db->prepare("DELETE FROM login_attempts WHERE username = ? AND ip_address = ?");
     $stmt->execute([$username, $ipAddress]);
 }
 
 function getLockoutRemaining($username, $ipAddress) {
+    if (!tableExists('login_attempts')) return 0;
     $db = getDB();
     $stmt = $db->prepare("SELECT MIN(attempted_at) FROM login_attempts WHERE username = ? AND ip_address = ? AND attempted_at > DATE_SUB(NOW(), INTERVAL 15 MINUTE)");
     $stmt->execute([$username, $ipAddress]);
@@ -91,7 +116,12 @@ function loginAdmin($username, $password) {
         return ['success' => false, 'message' => "Too many failed attempts. Try again in {$minutes} minute" . ($minutes !== 1 ? 's' : '') . "."];
     }
 
-    $stmt = $db->prepare("SELECT id, username, password_hash, role FROM admin_users WHERE username = ?");
+    // Check if role column exists, query accordingly
+    if (columnExists('admin_users', 'role')) {
+        $stmt = $db->prepare("SELECT id, username, password_hash, role FROM admin_users WHERE username = ?");
+    } else {
+        $stmt = $db->prepare("SELECT id, username, password_hash FROM admin_users WHERE username = ?");
+    }
     $stmt->execute([$username]);
     $user = $stmt->fetch();
 

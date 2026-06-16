@@ -23,17 +23,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $db = getDB();
 
         // Rate limit: max 3 requests per IP per 15 minutes
-        $stmt = $db->prepare("SELECT COUNT(*) FROM password_reset_attempts WHERE ip_address = ? AND attempted_at > DATE_SUB(NOW(), INTERVAL 15 MINUTE)");
-        $stmt->execute([$ipAddress]);
-        $recentAttempts = (int)$stmt->fetchColumn();
+        $recentAttempts = 0;
+        if (tableExists('password_reset_attempts')) {
+            $stmt = $db->prepare("SELECT COUNT(*) FROM password_reset_attempts WHERE ip_address = ? AND attempted_at > DATE_SUB(NOW(), INTERVAL 15 MINUTE)");
+            $stmt->execute([$ipAddress]);
+            $recentAttempts = (int)$stmt->fetchColumn();
+        }
 
         if ($recentAttempts >= 3) {
             $message = 'Too many reset requests. Please try again in 15 minutes.';
             $message_type = 'error';
         } else {
             // Record this attempt
-            $stmt = $db->prepare("INSERT INTO password_reset_attempts (ip_address, attempted_at) VALUES (?, NOW())");
-            $stmt->execute([$ipAddress]);
+            if (tableExists('password_reset_attempts')) {
+                $stmt = $db->prepare("INSERT INTO password_reset_attempts (ip_address, attempted_at) VALUES (?, NOW())");
+                $stmt->execute([$ipAddress]);
+            }
 
             $stmt = $db->prepare("SELECT id, username, email FROM admin_users WHERE username = ? AND email = ?");
             $stmt->execute([$username, $email]);
