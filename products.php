@@ -34,7 +34,7 @@ try {
 
 <section class="section" style="padding-bottom:0;">
     <div class="container">
-        <div style="max-width:800px;">
+        <div style="max-width:min(800px, 100%);">
             <span class="kicker">Catalog</span>
             <h1 data-reveal>The Complete <em>Wholesale</em><br>Catalog.</h1>
             <p style="font-size:var(--text-lg);color:var(--text-secondary);">500+ mobile accessories, one supplier. Filter by category, search by name, quote by the case.</p>
@@ -50,7 +50,7 @@ try {
                 <button class="pill" data-filter="<?php echo htmlspecialchars($cat['slug']); ?>"><?php echo htmlspecialchars($cat['name']); ?></button>
             <?php endforeach; ?>
         </div>
-        <div style="position:relative;max-width:400px;margin:var(--space-6) 0;" data-reveal>
+        <div style="position:relative;max-width:min(400px, 100%);margin:var(--space-6) 0;" data-reveal>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--text-muted);pointer-events:none;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input type="text" id="productSearch" placeholder="Search products..." autocomplete="off" aria-label="Search products" style="width:100%;padding:0.75rem 1rem 0.75rem 2.5rem;background:var(--bg-surface);border:1.5px solid var(--border-color);border-radius:var(--radius-sm);color:var(--text-primary);">
         </div>

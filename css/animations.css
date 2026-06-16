@@ -59,6 +59,7 @@ body.is-loading .page-curtain {
 
 .hero-section {
   position: relative;
+  overflow: hidden;
 }
 
 .hero-cable {

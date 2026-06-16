@@ -91,7 +91,7 @@ $error = '';
 
 <section class="section" style="padding-bottom:0;">
     <div class="container">
-        <div style="max-width:800px;">
+        <div style="max-width:min(800px, 100%);">
             <span class="kicker">Bulk Order</span>
             <h1 data-reveal>Stock Your Shelves.</h1>
             <p style="font-size:var(--text-lg);color:var(--text-secondary);">Send one request, get a tailored reply with pricing, delivery window, and stock holds within a business day.</p>
@@ -133,7 +133,7 @@ $error = '';
 
 <section class="section">
     <div class="container">
-        <div style="max-width:760px;margin:0 auto;">
+        <div style="max-width:min(760px, 100%);margin:0 auto;">
             <div style="text-align:center;margin-bottom:var(--spacing-lg);">
                 <span class="kicker kicker--center">Request a quote</span>
                 <h2 class="section-title" style="margin-top:8px;">Tell us what you need.</h2>

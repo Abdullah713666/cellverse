@@ -6,7 +6,7 @@ require_once 'includes/header.php';
 
 <section class="section" style="padding-bottom:0;">
     <div class="container">
-        <div style="max-width:960px;">
+        <div style="max-width:min(960px, 100%);">
             <span class="kicker">Our Story</span>
             <h1 data-reveal>Pakistan's Leading Wholesale Supplier.</h1>
             <p style="font-size:var(--text-lg);color:var(--text-secondary);">A decade of trust, an ocean of inventory, and a single mission: making wholesale mobile accessories effortless for businesses that scale.</p>

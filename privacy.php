@@ -6,7 +6,7 @@ require_once 'includes/header.php';
 
 <section class="section" style="padding-bottom:0;">
     <div class="container">
-        <div style="max-width:800px;">
+        <div style="max-width:min(800px, 100%);">
             <span class="kicker" data-reveal>Legal</span>
             <h1 data-reveal>Privacy Policy.</h1>
             <p data-reveal style="font-size:var(--text-lg);color:var(--text-secondary);">Last updated: <?php echo date('F j, Y'); ?>. We keep this short and readable.</p>
@@ -15,7 +15,7 @@ require_once 'includes/header.php';
 </section>
 
 <section class="section">
-    <div class="container" style="max-width: 760px;">
+    <div class="container" style="max-width:min(760px, 100%);">
         <div class="prose">
             <h2 class="section-title">What we collect</h2>
             <p>When you contact us or place a wholesale order, we collect your name, company, email, phone, shipping address, and the details of your inquiry. We use this to fulfill orders, send quotes, and respond to support questions. If you create an account with us, we also store a salted password hash and your last login timestamp.</p>

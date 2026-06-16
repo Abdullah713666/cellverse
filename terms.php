@@ -6,7 +6,7 @@ require_once 'includes/header.php';
 
 <section class="section" style="padding-bottom:0;">
     <div class="container">
-        <div style="max-width:800px;">
+        <div style="max-width:min(800px, 100%);">
             <span class="kicker" data-reveal>Legal</span>
             <h1 data-reveal>Terms of Service.</h1>
             <p data-reveal style="font-size:var(--text-lg);color:var(--text-secondary);">Plain English terms for wholesale orders. Last updated: <?php echo date('F j, Y'); ?>.</p>
@@ -15,7 +15,7 @@ require_once 'includes/header.php';
 </section>
 
 <section class="section">
-    <div class="container" style="max-width: 760px;">
+    <div class="container" style="max-width:min(760px, 100%);">
         <div class="prose">
             <h2 class="section-title">1. Orders and pricing</h2>
             <p>All quotes are valid for 7 calendar days unless otherwise noted. Prices are exclusive of GST and freight unless the quote states otherwise. Minimum order quantities shown on each product apply and must be respected for stock hold priority. We reserve the right to update prices for raw material or forex-driven changes, with 14 days notice on open orders.</p>

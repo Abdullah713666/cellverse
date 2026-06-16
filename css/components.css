@@ -630,11 +630,13 @@
   align-items: center;
   min-height: auto;
   overflow: hidden;
+  max-width: 100%;
 }
 
 .hero-content {
   max-width: 560px;
   min-width: 0;
+  overflow: hidden;
 }
 
 .hero-content h1 {
@@ -689,6 +691,7 @@
   width: 100%;
   aspect-ratio: 4 / 3;
   pointer-events: none;
+  overflow: hidden;
 }
 
 .hero-visual canvas {

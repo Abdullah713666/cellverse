@@ -20,7 +20,7 @@ foreach ($faqs as $faq) {
 
 <section class="section" style="padding-bottom:0;">
     <div class="container">
-        <div style="max-width:800px;">
+        <div style="max-width:min(800px, 100%);">
             <span class="kicker">Help Center</span>
             <h1 data-reveal>Common Questions, Answered.</h1>
             <p style="font-size:var(--text-lg);color:var(--text-secondary);">Search by keyword or browse by topic. Can't find what you need? Our team is one click away.</p>

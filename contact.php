@@ -67,7 +67,7 @@ $recaptcha_site_key = getRecaptchaSiteKey();
 
 <section class="section" style="padding-bottom:0;">
     <div class="container">
-        <div style="max-width:800px;">
+        <div style="max-width:min(800px, 100%);">
             <span class="kicker">Get in touch</span>
             <h1 data-reveal>Let's Talk Wholesale.</h1>
             <p style="font-size:var(--text-lg);color:var(--text-secondary);">Questions, quotes, custom catalogs, or just a quick sanity check — we answer every message within one business day.</p>
