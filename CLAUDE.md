@@ -91,8 +91,11 @@ cellverse/
 | `testimonials` | Client testimonials (3 seeded) |
 | `faqs` | FAQ entries (8 seeded) |
 | `site_settings` | Key-value site configuration |
-| `admin_users` | Admin accounts (bcrypt hashed) |
+| `admin_users` | Admin accounts (bcrypt hashed, roles: super_admin/admin) |
 | `users` | Registered user accounts |
+| `password_resets` | Password reset tokens (single-use, 1hr expiry) |
+| `login_attempts` | Brute force tracking (per username+IP, 15min window) |
+| `password_reset_attempts` | Forgot password rate limiting (per IP, 15min window) |
 
 ---
 
@@ -107,8 +110,11 @@ cellverse/
 ### Admin Panel (9 pages)
 - **Dashboard**: Stats cards (products, orders, pending, messages), recent orders table
 - **CRUD**: Products, categories, FAQs, users, messages, orders
-- **Settings / Reports**
-- Auth: bcrypt password verification, brute-force lockout (5 attempts / 15 min), 30-min idle timeout, tab-scoped sessions
+- **Settings / Reports / Forgot Password / Reset Password**
+- **Auth**: bcrypt verification, DB-backed brute force (5 attempts/15min per IP+username), 30-min idle timeout, 12h max session, tab-scoped sessions
+- **RBAC**: 2 roles — `super_admin` (full access) and `admin` (products/orders/messages/reports). Settings, Users, Migrate restricted to super_admin
+- **Email**: Gmail SMTP via PHPMailer for password reset emails
+- **Password toggle**: Eye icon on login and reset password pages
 
 ### Design System
 - **Colors**: Navy (#1e3a5f) + Gold (#b8860b) palette with light/dark modes
@@ -119,8 +125,13 @@ cellverse/
 ### Security
 - CSRF tokens on all state-changing forms (`csrf_field()` + `require_csrf_or_die()`)
 - PDO with `EMULATE_PREPARES => false` (real prepared statements)
-- Session cookies: `httponly`, `samesite=Strict`
-- Security headers via `.htaccess`: CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy, Permissions-Policy
+- Session cookies: `httponly`, `samesite=Strict`, `secure` in production
+- Security headers: CSP, HSTS, X-Frame-Options, X-Content-Type-Options, Referrer-Policy
+- DB-backed brute force protection (survives session/cookie clearing)
+- Rate limiting on forgot password (3 requests per IP per 15 minutes)
+- Password reset tokens: single-use, 1-hour expiry, cryptographically random
+- Role-based access control (super_admin / admin)
+- 12-hour maximum absolute session lifetime
 - Input validation: `clamp_int()`, `validate_phone()`, length caps, regex
 - Image upload validated via `finfo->file()` (server-side MIME check)
 - Admin pages have `noindex, nofollow` robots header
