@@ -170,10 +170,10 @@ $messCounts = array_column($messagesData, 'message_count');
     new Chart(document.getElementById('monthlyChart'), {
         type: 'bar',
         data: {
-            labels: <?php echo json_encode($monthLabels); ?>,
+            labels: <?php echo json_encode($monthLabels, JSON_HEX_TAG); ?>,
             datasets: [{
                 label: 'Orders',
-                data: <?php echo json_encode($monthCounts); ?>,
+                data: <?php echo json_encode($monthCounts, JSON_HEX_TAG); ?>,
                 backgroundColor: colors.primary,
                 borderRadius: 6
             }]
@@ -182,13 +182,13 @@ $messCounts = array_column($messagesData, 'message_count');
     });
 
     // Orders by Status
-    const statusColorsArr = <?php echo json_encode($statusColors); ?>;
+    const statusColorsArr = <?php echo json_encode($statusColors, JSON_HEX_TAG); ?>;
     new Chart(document.getElementById('statusChart'), {
         type: 'doughnut',
         data: {
-            labels: <?php echo json_encode($statusLabels); ?>,
+            labels: <?php echo json_encode($statusLabels, JSON_HEX_TAG); ?>,
             datasets: [{
-                data: <?php echo json_encode($statusCountsArr); ?>,
+                data: <?php echo json_encode($statusCountsArr, JSON_HEX_TAG); ?>,
                 backgroundColor: statusColorsArr.slice(0, <?php echo count($statusLabels); ?>),
                 borderWidth: 0
             }]
@@ -207,10 +207,10 @@ $messCounts = array_column($messagesData, 'message_count');
     new Chart(document.getElementById('productsChart'), {
         type: 'bar',
         data: {
-            labels: <?php echo json_encode($productNames); ?>,
+            labels: <?php echo json_encode($productNames, JSON_HEX_TAG); ?>,
             datasets: [{
                 label: 'Quantity Ordered',
-                data: <?php echo json_encode($productQty); ?>,
+                data: <?php echo json_encode($productQty, JSON_HEX_TAG); ?>,
                 backgroundColor: [colors.primary, colors.secondary, colors.tertiary, colors.danger, colors.blue],
                 borderRadius: 6
             }]
@@ -225,10 +225,10 @@ $messCounts = array_column($messagesData, 'message_count');
     new Chart(document.getElementById('messagesChart'), {
         type: 'line',
         data: {
-            labels: <?php echo json_encode($messLabels); ?>,
+            labels: <?php echo json_encode($messLabels, JSON_HEX_TAG); ?>,
             datasets: [{
                 label: 'Messages',
-                data: <?php echo json_encode($messCounts); ?>,
+                data: <?php echo json_encode($messCounts, JSON_HEX_TAG); ?>,
                 borderColor: colors.secondary,
                 backgroundColor: 'rgba(124,58,237,.15)',
                 fill: true,

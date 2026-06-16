@@ -76,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $filename = 'uploads/products/' . uniqid('p_', true) . '.' . $ext;
 
                     if (!is_dir('../uploads/products')) {
-                        mkdir('../uploads/products', 0775, true);
+                        mkdir('../uploads/products', 0755, true);
                     }
 
                     if (move_uploaded_file($_FILES['image']['tmp_name'], '../' . $filename)) {
@@ -94,6 +94,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($_POST['action'] === 'edit') {
                     $id = clamp_int($_POST['id'] ?? 0, 1);
                     if ($image_path) {
+                        $oldImage = $db->prepare("SELECT image_path FROM products WHERE id=?");
+                        $oldImage->execute([$id]);
+                        $oldRow = $oldImage->fetch();
+                        if ($oldRow && $oldRow['image_path'] && file_exists('../' . $oldRow['image_path'])) {
+                            unlink('../' . $oldRow['image_path']);
+                        }
                         $stmt = $db->prepare("UPDATE products SET name=?, slug=?, description=?, category_id=?, image_path=?, price_per_unit=?, moq=?, stock_qty=?, sku=?, status=?, is_featured=? WHERE id=?");
                         $stmt->execute([$name, $slug, $description, $category_id, $image_path, $price_per_unit, $moq, $stock_qty, $sku, $status, $is_featured, $id]);
                     } else {

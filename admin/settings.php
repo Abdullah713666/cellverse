@@ -134,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 </div>
                 <div class="info-row">
                     <span class="info-label">Admin ID</span>
-                    <span class="info-value">#<?php echo $_SESSION['admin_id']; ?></span>
+                    <span class="info-value">#<?php echo (int)$_SESSION['admin_id']; ?></span>
                 </div>
             </div>
 

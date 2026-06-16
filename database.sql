@@ -98,7 +98,19 @@ CREATE TABLE IF NOT EXISTS admin_users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
+    email VARCHAR(200),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+-- Password reset tokens table
+CREATE TABLE IF NOT EXISTS password_resets (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    admin_id INT NOT NULL,
+    token VARCHAR(64) UNIQUE NOT NULL,
+    expires_at DATETIME NOT NULL,
+    used TINYINT(1) DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (admin_id) REFERENCES admin_users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
 -- Registered users table
@@ -119,8 +131,8 @@ CREATE TABLE IF NOT EXISTS users (
 -- ============================================
 
 -- Default admin user (password: admin123)
-INSERT INTO admin_users (username, password_hash) VALUES
-('admin', '$2y$10$lu.cfc9SzhtL8RxZHLlY.OD38oJBkujLOUKmaNETFKIVdfnQdTlvG');
+INSERT INTO admin_users (username, password_hash, email) VALUES
+('admin', '$2y$10$lu.cfc9SzhtL8RxZHLlY.OD38oJBkujLOUKmaNETFKIVdfnQdTlvG', 'admin@cellverse.com');
 
 -- Default categories
 INSERT INTO categories (name, slug, description, display_order) VALUES
@@ -182,3 +194,23 @@ INSERT INTO site_settings (setting_key, setting_value) VALUES
 ('facebook_url', 'https://facebook.com/cellverse'),
 ('instagram_url', 'https://instagram.com/cellverse'),
 ('youtube_url', 'https://youtube.com/cellverse');
+
+-- ============================================
+-- Migrations for existing installs
+-- ============================================
+
+-- Add email column to admin_users if missing
+SET @col_exists = (SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = 'admin_users' AND column_name = 'email');
+SET @sql = IF(@col_exists = 0, 'ALTER TABLE admin_users ADD COLUMN email VARCHAR(200) AFTER password_hash', 'SELECT 1');
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+-- Create password_resets table if missing
+CREATE TABLE IF NOT EXISTS password_resets (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    admin_id INT NOT NULL,
+    token VARCHAR(64) UNIQUE NOT NULL,
+    expires_at DATETIME NOT NULL,
+    used TINYINT(1) DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (admin_id) REFERENCES admin_users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;

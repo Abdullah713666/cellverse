@@ -210,10 +210,10 @@ $totalCount = array_sum($statusCounts);
                                         </td>
                                         <td>
                                             <div class="actions-cell">
-                                                <button class="btn btn-secondary btn-sm" onclick="openNotesModal(<?php echo $order['id']; ?>, `<?php echo htmlspecialchars($order['admin_notes'] ?? '', ENT_QUOTES); ?>`)">
+                                                <button class="btn btn-secondary btn-sm" onclick="openNotesModal(<?php echo (int)$order['id']; ?>, <?php echo htmlspecialchars(json_encode($order['admin_notes'] ?? ''), ENT_QUOTES); ?>)">
                                                     Notes
                                                 </button>
-                                                <button class="btn btn-secondary btn-sm" onclick="openDetailsModal(<?php echo htmlspecialchars(json_encode($order), ENT_QUOTES); ?>)">
+                                                <button class="btn btn-secondary btn-sm" onclick="openDetailsModal(this)" data-order="<?php echo htmlspecialchars(json_encode($order), ENT_QUOTES); ?>">
                                                     View
                                                 </button>
                                                 <form method="POST" style="display:inline;" onsubmit="return confirm('Delete order #<?php echo (int)$order['id']; ?>?');">
@@ -263,28 +263,50 @@ $totalCount = array_sum($statusCounts);
     </div>
 
     <script>
+    function escapeHtml(str) {
+        if (!str) return '';
+        var div = document.createElement('div');
+        div.appendChild(document.createTextNode(str));
+        return div.innerHTML;
+    }
+
     function openNotesModal(orderId, notes) {
         document.getElementById('notesOrderId').value = orderId;
         document.getElementById('notesTextarea').value = notes || '';
         document.getElementById('notesModal').classList.add('active');
     }
 
-    function openDetailsModal(order) {
-        const html = `
-            <p><strong>Company:</strong> ${order.company_name}</p>
-            <p><strong>Contact:</strong> ${order.contact_person}</p>
-            <p><strong>Email:</strong> ${order.email}</p>
-            <p><strong>Phone:</strong> ${order.phone}</p>
-            <p><strong>Product:</strong> ${order.product_name}</p>
-            <p><strong>Quantity:</strong> ${order.quantity}</p>
-            <p><strong>Required Date:</strong> ${new Date(order.required_date).toLocaleDateString()}</p>
-            <p><strong>Delivery Address:</strong> ${order.delivery_address || 'N/A'}</p>
-            <p><strong>Customer Notes:</strong> ${order.notes || 'None'}</p>
-            <p><strong>Admin Notes:</strong> ${order.admin_notes || 'None'}</p>
-            <p><strong>Status:</strong> <span class="status-badge status-${order.status}">${order.status}</span></p>
-            <p><strong>Created:</strong> ${new Date(order.created_at).toLocaleString()}</p>
-        `;
-        document.getElementById('detailsContent').innerHTML = html;
+    function openDetailsModal(btn) {
+        var order = JSON.parse(btn.getAttribute('data-order'));
+        var container = document.getElementById('detailsContent');
+        container.innerHTML = '';
+
+        var fields = [
+            ['Company', order.company_name],
+            ['Contact', order.contact_person],
+            ['Email', order.email],
+            ['Phone', order.phone],
+            ['Product', order.product_name],
+            ['Quantity', order.quantity],
+            ['Required Date', order.required_date ? new Date(order.required_date).toLocaleDateString() : 'N/A'],
+            ['Delivery Address', order.delivery_address || 'N/A'],
+            ['Customer Notes', order.notes || 'None'],
+            ['Admin Notes', order.admin_notes || 'None'],
+            ['Created', order.created_at ? new Date(order.created_at).toLocaleString() : 'N/A']
+        ];
+
+        fields.forEach(function(f) {
+            var p = document.createElement('p');
+            p.innerHTML = '<strong>' + escapeHtml(f[0]) + ':</strong> ' + escapeHtml(String(f[1]));
+            container.appendChild(p);
+        });
+
+        var statusP = document.createElement('p');
+        var validStatuses = ['pending','confirmed','processing','shipped','delivered','cancelled'];
+        var statusClass = validStatuses.indexOf(order.status) !== -1 ? order.status : 'pending';
+        statusP.innerHTML = '<strong>Status:</strong> <span class="status-badge status-' + escapeHtml(statusClass) + '">' + escapeHtml(order.status) + '</span>';
+        container.appendChild(statusP);
+
         document.getElementById('detailsModal').classList.add('active');
     }
 
@@ -293,7 +315,7 @@ $totalCount = array_sum($statusCounts);
         document.getElementById('detailsModal').classList.remove('active');
     }
 
-    document.querySelectorAll('.modal-overlay').forEach(overlay => {
+    document.querySelectorAll('.modal-overlay').forEach(function(overlay) {
         overlay.addEventListener('click', function(e) {
             if (e.target === this) closeModals();
         });

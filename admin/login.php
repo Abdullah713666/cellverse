@@ -57,11 +57,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <?php if ($error): ?>
-                <div class="alert alert-error"><?php echo $error; ?></div>
+                <div class="alert alert-error"><?php echo htmlspecialchars($error); ?></div>
             <?php endif; ?>
 
             <?php if ($timeout): ?>
-                <div class="alert alert-warning"><?php echo $timeout; ?></div>
+                <div class="alert alert-warning"><?php echo htmlspecialchars($timeout); ?></div>
             <?php endif; ?>
 
             <form method="POST">
@@ -76,6 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </div>
                 <button type="submit" class="btn btn-primary" style="width:100%;">Sign In</button>
             </form>
+            <p style="text-align:center;margin-top:16px;"><a href="forgot_password.php" style="color:#94a3b8;text-decoration:underline;font-size:0.9rem;">Forgot password?</a></p>
         </div>
     </div>
 </body>
