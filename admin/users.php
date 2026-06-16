@@ -1,6 +1,7 @@
 <?php
 require_once 'auth.php';
 requireLogin();
+requireRole(['super_admin']);
 
 $db = getDB();
 $message = '';

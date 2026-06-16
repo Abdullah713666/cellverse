@@ -3,13 +3,11 @@
  * One-time migration script.
  * Visit /admin/migrate.php once to apply schema changes, then delete this file.
  */
-require_once __DIR__ . '/../config/init.php';
+require_once 'auth.php';
+requireLogin();
+requireRole(['super_admin']);
 
-if (!isset($_SESSION['admin_id'])) {
-    header('Location: login.php');
-    exit;
-}
-
+$db = getDB();
 $migrations = [];
 $allOk = true;
 
@@ -23,12 +21,26 @@ try {
         $migrations[] = ['email column already exists', true];
     }
 
-    // 2. Set default email for admin user
+    // 2. Add role column to admin_users if missing
+    $colCheck = $db->query("SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = 'admin_users' AND column_name = 'role'")->fetchColumn();
+    if ($colCheck == 0) {
+        $db->exec("ALTER TABLE admin_users ADD COLUMN role ENUM('super_admin','admin') DEFAULT 'admin' AFTER email");
+        $migrations[] = ['Added role column to admin_users', true];
+    } else {
+        $migrations[] = ['role column already exists', true];
+    }
+
+    // 3. Set default email for admin user
     $stmt = $db->prepare("UPDATE admin_users SET email = ? WHERE username = ? AND (email IS NULL OR email = '')");
     $stmt->execute(['admin@cellverse.com', 'admin']);
     $migrations[] = ['Set default email for admin user', true];
 
-    // 3. Create password_resets table if missing
+    // 4. Set admin role to super_admin
+    $stmt = $db->prepare("UPDATE admin_users SET role = 'super_admin' WHERE username = ? AND (role IS NULL OR role = '')");
+    $stmt->execute(['admin']);
+    $migrations[] = ['Set admin role to super_admin', true];
+
+    // 5. Create password_resets table if missing
     $tableCheck = $db->query("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = 'password_resets'")->fetchColumn();
     if ($tableCheck == 0) {
         $db->exec("CREATE TABLE IF NOT EXISTS password_resets (
@@ -44,6 +56,49 @@ try {
     } else {
         $migrations[] = ['password_resets table already exists', true];
     }
+
+    // 6. Create login_attempts table if missing
+    $tableCheck = $db->query("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = 'login_attempts'")->fetchColumn();
+    if ($tableCheck == 0) {
+        $db->exec("CREATE TABLE IF NOT EXISTS login_attempts (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            username VARCHAR(50) NOT NULL,
+            ip_address VARCHAR(45) NOT NULL,
+            attempted_at DATETIME NOT NULL,
+            INDEX idx_lookup (username, ip_address, attempted_at)
+        ) ENGINE=InnoDB");
+        $migrations[] = ['Created login_attempts table', true];
+    } else {
+        $migrations[] = ['login_attempts table already exists', true];
+    }
+
+    // 7. Create password_reset_attempts table if missing
+    $tableCheck = $db->query("SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = DATABASE() AND table_name = 'password_reset_attempts'")->fetchColumn();
+    if ($tableCheck == 0) {
+        $db->exec("CREATE TABLE IF NOT EXISTS password_reset_attempts (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            ip_address VARCHAR(45) NOT NULL,
+            attempted_at DATETIME NOT NULL,
+            INDEX idx_lookup (ip_address, attempted_at)
+        ) ENGINE=InnoDB");
+        $migrations[] = ['Created password_reset_attempts table', true];
+    } else {
+        $migrations[] = ['password_reset_attempts table already exists', true];
+    }
+
+    // 8. Add SMTP settings if missing
+    $stmt = $db->prepare("SELECT COUNT(*) FROM site_settings WHERE setting_key = ?");
+    $smtpKeys = ['smtp_host', 'smtp_port', 'smtp_user', 'smtp_pass', 'smtp_from', 'smtp_from_name'];
+    $smtpDefaults = ['smtp_host' => '', 'smtp_port' => '587', 'smtp_user' => '', 'smtp_pass' => '', 'smtp_from' => '', 'smtp_from_name' => 'CellVerse Admin'];
+    foreach ($smtpKeys as $key) {
+        $stmt->execute([$key]);
+        if ($stmt->fetchColumn() == 0) {
+            $ins = $db->prepare("INSERT INTO site_settings (setting_key, setting_value) VALUES (?, ?)");
+            $ins->execute([$key, $smtpDefaults[$key]]);
+        }
+    }
+    $migrations[] = ['SMTP settings in site_settings', true];
+
 } catch (Exception $e) {
     $migrations[] = ['Error: ' . $e->getMessage(), false];
     $allOk = false;
@@ -55,6 +110,9 @@ try {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Database Migration - CellVerse Admin</title>
+    <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
     <style>
         body { font-family: 'Inter', sans-serif; background: #0f172a; color: #e2e8f0; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; }
         .card { background: #1e293b; border-radius: 12px; padding: 32px; max-width: 500px; width: 100%; }
@@ -77,7 +135,7 @@ try {
         <?php endforeach; ?>
 
         <?php if ($allOk): ?>
-            <p style="color:#4ade80;margin-top:20px;">All migrations completed successfully.</p>
+            <p style="color:#4ade80;margin-top:20px;">All migrations completed successfully. You can now delete this file.</p>
         <?php endif; ?>
 
         <a href="index.php" class="btn">Back to Dashboard</a>

@@ -99,6 +99,7 @@ CREATE TABLE IF NOT EXISTS admin_users (
     username VARCHAR(50) UNIQUE NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     email VARCHAR(200),
+    role ENUM('super_admin','admin') DEFAULT 'admin',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
@@ -111,6 +112,23 @@ CREATE TABLE IF NOT EXISTS password_resets (
     used TINYINT(1) DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (admin_id) REFERENCES admin_users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
+-- Login attempts table (brute force protection)
+CREATE TABLE IF NOT EXISTS login_attempts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    ip_address VARCHAR(45) NOT NULL,
+    attempted_at DATETIME NOT NULL,
+    INDEX idx_lookup (username, ip_address, attempted_at)
+) ENGINE=InnoDB;
+
+-- Password reset request attempts table (rate limiting)
+CREATE TABLE IF NOT EXISTS password_reset_attempts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ip_address VARCHAR(45) NOT NULL,
+    attempted_at DATETIME NOT NULL,
+    INDEX idx_lookup (ip_address, attempted_at)
 ) ENGINE=InnoDB;
 
 -- Registered users table
@@ -131,8 +149,8 @@ CREATE TABLE IF NOT EXISTS users (
 -- ============================================
 
 -- Default admin user (password: admin123)
-INSERT INTO admin_users (username, password_hash, email) VALUES
-('admin', '$2y$10$lu.cfc9SzhtL8RxZHLlY.OD38oJBkujLOUKmaNETFKIVdfnQdTlvG', 'admin@cellverse.com');
+INSERT INTO admin_users (username, password_hash, email, role) VALUES
+('admin', '$2y$10$lu.cfc9SzhtL8RxZHLlY.OD38oJBkujLOUKmaNETFKIVdfnQdTlvG', 'admin@cellverse.com', 'super_admin');
 
 -- Default categories
 INSERT INTO categories (name, slug, description, display_order) VALUES
@@ -193,7 +211,13 @@ INSERT INTO site_settings (setting_key, setting_value) VALUES
 ('about_text', 'CellVerse is Pakistan\'s leading wholesale supplier of mobile accessories. With over 10 years of experience, we provide high-quality products at competitive bulk prices to retailers and businesses across the country.'),
 ('facebook_url', 'https://facebook.com/cellverse'),
 ('instagram_url', 'https://instagram.com/cellverse'),
-('youtube_url', 'https://youtube.com/cellverse');
+('youtube_url', 'https://youtube.com/cellverse'),
+('smtp_host', ''),
+('smtp_port', '587'),
+('smtp_user', ''),
+('smtp_pass', ''),
+('smtp_from', ''),
+('smtp_from_name', 'CellVerse Admin');
 
 -- ============================================
 -- Migrations for existing installs
@@ -202,6 +226,11 @@ INSERT INTO site_settings (setting_key, setting_value) VALUES
 -- Add email column to admin_users if missing
 SET @col_exists = (SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = 'admin_users' AND column_name = 'email');
 SET @sql = IF(@col_exists = 0, 'ALTER TABLE admin_users ADD COLUMN email VARCHAR(200) AFTER password_hash', 'SELECT 1');
+PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
+
+-- Add role column to admin_users if missing
+SET @col_exists = (SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = 'admin_users' AND column_name = 'role');
+SET @sql = IF(@col_exists = 0, 'ALTER TABLE admin_users ADD COLUMN role ENUM(\'super_admin\',\'admin\') DEFAULT \'admin\' AFTER email', 'SELECT 1');
 PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
 -- Create password_resets table if missing
@@ -214,3 +243,23 @@ CREATE TABLE IF NOT EXISTS password_resets (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (admin_id) REFERENCES admin_users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
+
+-- Create login_attempts table if missing
+CREATE TABLE IF NOT EXISTS login_attempts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL,
+    ip_address VARCHAR(45) NOT NULL,
+    attempted_at DATETIME NOT NULL,
+    INDEX idx_lookup (username, ip_address, attempted_at)
+) ENGINE=InnoDB;
+
+-- Create password_reset_attempts table if missing
+CREATE TABLE IF NOT EXISTS password_reset_attempts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ip_address VARCHAR(45) NOT NULL,
+    attempted_at DATETIME NOT NULL,
+    INDEX idx_lookup (ip_address, attempted_at)
+) ENGINE=InnoDB;
+
+-- Set default admin role to super_admin if null
+UPDATE admin_users SET role = 'super_admin' WHERE role IS NULL AND username = 'admin';

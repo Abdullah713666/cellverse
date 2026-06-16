@@ -1,6 +1,7 @@
 <?php
 require_once 'auth.php';
 requireLogin();
+requireRole(['super_admin']);
 
 $db = getDB();
 $message = '';
@@ -88,6 +89,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
             }
         }
     }
+
+    // Handle SMTP settings
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'change_smtp') {
+        require_csrf_or_die();
+        $smtpKeys = ['smtp_host', 'smtp_port', 'smtp_user', 'smtp_pass', 'smtp_from', 'smtp_from_name'];
+        foreach ($smtpKeys as $key) {
+            $val = $_POST[$key] ?? '';
+            $stmt = $db->prepare("SELECT COUNT(*) FROM site_settings WHERE setting_key = ?");
+            $stmt->execute([$key]);
+            if ($stmt->fetchColumn() > 0) {
+                $stmt = $db->prepare("UPDATE site_settings SET setting_value = ? WHERE setting_key = ?");
+                $stmt->execute([$val, $key]);
+            } else {
+                $stmt = $db->prepare("INSERT INTO site_settings (setting_key, setting_value) VALUES (?, ?)");
+                $stmt->execute([$key, $val]);
+            }
+        }
+        $message = 'SMTP settings updated successfully.';
+        $message_type = 'success';
+    }
+}
+
+// Load current SMTP settings
+$smtpSettings = [];
+$smtpKeys = ['smtp_host', 'smtp_port', 'smtp_user', 'smtp_pass', 'smtp_from', 'smtp_from_name'];
+foreach ($smtpKeys as $key) {
+    $stmt = $db->prepare("SELECT setting_value FROM site_settings WHERE setting_key = ?");
+    $stmt->execute([$key]);
+    $row = $stmt->fetch();
+    $smtpSettings[$key] = $row ? $row['setting_value'] : '';
 }
 ?>
 <!DOCTYPE html>
@@ -136,6 +167,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                     <span class="info-label">Admin ID</span>
                     <span class="info-value">#<?php echo (int)$_SESSION['admin_id']; ?></span>
                 </div>
+                <div class="info-row">
+                    <span class="info-label">Role</span>
+                    <span class="info-value" style="text-transform:capitalize;"><?php echo htmlspecialchars($_SESSION['admin_role'] ?? 'admin'); ?></span>
+                </div>
             </div>
 
             <div class="settings-card">
@@ -176,6 +211,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                     </div>
 
                     <button type="submit" class="btn btn-primary" onclick="return confirm('Update your credentials?');">Save Changes</button>
+                </form>
+            </div>
+
+            <div class="settings-card">
+                <h3>SMTP Email Settings</h3>
+                <p class="subtitle">Configure Gmail SMTP for password reset emails</p>
+
+                <div class="password-note" style="background:rgba(99,102,241,0.08);border-color:rgba(99,102,241,0.2);color:#818cf8;">
+                    Use a <strong>Gmail App Password</strong> (not your regular password).<br>
+                    Generate one at: <a href="https://myaccount.google.com/apppasswords" target="_blank" style="color:#c4b5fd;text-decoration:underline;">myaccount.google.com/apppasswords</a>
+                </div>
+
+                <form method="POST">
+                    <?php csrf_field(); ?>
+                    <input type="hidden" name="action" value="change_smtp">
+
+                    <div class="form-group">
+                        <label for="smtp_host">SMTP Host</label>
+                        <input type="text" id="smtp_host" name="smtp_host" value="<?php echo htmlspecialchars($smtpSettings['smtp_host'] ?: 'smtp.gmail.com'); ?>" maxlength="200">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="smtp_port">SMTP Port</label>
+                        <input type="number" id="smtp_port" name="smtp_port" value="<?php echo htmlspecialchars($smtpSettings['smtp_port'] ?: '587'); ?>" maxlength="10">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="smtp_user">SMTP Username (Gmail address)</label>
+                        <input type="email" id="smtp_user" name="smtp_user" value="<?php echo htmlspecialchars($smtpSettings['smtp_user']); ?>" maxlength="200" placeholder="you@gmail.com">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="smtp_pass">SMTP Password (App Password)</label>
+                        <input type="password" id="smtp_pass" name="smtp_pass" value="<?php echo htmlspecialchars($smtpSettings['smtp_pass']); ?>" maxlength="200" placeholder="xxxx xxxx xxxx xxxx">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="smtp_from">From Email</label>
+                        <input type="email" id="smtp_from" name="smtp_from" value="<?php echo htmlspecialchars($smtpSettings['smtp_from']); ?>" maxlength="200" placeholder="Same as username if empty">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="smtp_from_name">From Name</label>
+                        <input type="text" id="smtp_from_name" name="smtp_from_name" value="<?php echo htmlspecialchars($smtpSettings['smtp_from_name'] ?: 'CellVerse Admin'); ?>" maxlength="200">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" onclick="return confirm('Update SMTP settings?');">Save SMTP Settings</button>
                 </form>
             </div>
         </main>

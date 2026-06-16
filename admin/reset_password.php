@@ -71,6 +71,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $valid_token) {
     <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <style>
+        .password-wrapper { position: relative; }
+        .password-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #64748b; padding: 4px; display: flex; align-items: center; }
+        .password-toggle:hover { color: #94a3b8; }
+        .password-toggle svg { width: 20px; height: 20px; }
+    </style>
 </head>
 <body class="login-page">
     <div class="login-container">
@@ -97,11 +103,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $valid_token) {
                     <?php csrf_field(); ?>
                     <div class="form-group">
                         <label for="new_password">New Password</label>
-                        <input type="password" id="new_password" name="new_password" required minlength="8" maxlength="200" autofocus>
+                        <div class="password-wrapper">
+                            <input type="password" id="new_password" name="new_password" required minlength="8" maxlength="200" autofocus>
+                            <button type="button" class="password-toggle" onclick="togglePassword('new_password', this)" aria-label="Toggle password visibility">
+                                <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                <svg class="eye-closed" style="display:none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                            </button>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="confirm_password">Confirm Password</label>
-                        <input type="password" id="confirm_password" name="confirm_password" required minlength="8" maxlength="200">
+                        <div class="password-wrapper">
+                            <input type="password" id="confirm_password" name="confirm_password" required minlength="8" maxlength="200">
+                            <button type="button" class="password-toggle" onclick="togglePassword('confirm_password', this)" aria-label="Toggle password visibility">
+                                <svg class="eye-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                <svg class="eye-closed" style="display:none;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                            </button>
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-primary" style="width:100%;">Update Password</button>
                 </form>
@@ -113,6 +131,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $valid_token) {
 
     <?php if ($valid_token): ?>
     <script>
+    function togglePassword(inputId, btn) {
+        var input = document.getElementById(inputId);
+        var eyeOpen = btn.querySelector('.eye-open');
+        var eyeClosed = btn.querySelector('.eye-closed');
+        if (input.type === 'password') {
+            input.type = 'text';
+            eyeOpen.style.display = 'none';
+            eyeClosed.style.display = 'block';
+        } else {
+            input.type = 'password';
+            eyeOpen.style.display = 'block';
+            eyeClosed.style.display = 'none';
+        }
+    }
     document.querySelector('form').addEventListener('submit', function(e) {
         var p = document.getElementById('new_password').value;
         var c = document.getElementById('confirm_password').value;

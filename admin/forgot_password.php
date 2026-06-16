@@ -1,5 +1,6 @@
 <?php
 require_once 'auth.php';
+require_once __DIR__ . '/includes/mailer.php';
 
 if (isLoggedIn()) {
     header('Location: index.php');
@@ -13,38 +14,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     require_csrf_or_die();
     $username = trim($_POST['username'] ?? '');
     $email = trim($_POST['email'] ?? '');
+    $ipAddress = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
 
     if (empty($username) || empty($email)) {
         $message = 'Please enter both username and email.';
         $message_type = 'error';
     } else {
         $db = getDB();
-        $stmt = $db->prepare("SELECT id, username, email FROM admin_users WHERE username = ? AND email = ?");
-        $stmt->execute([$username, $email]);
-        $admin = $stmt->fetch();
 
-        if ($admin) {
-            // Generate token
-            $token = bin2hex(random_bytes(32));
-            $expires = date('Y-m-d H:i:s', strtotime('+1 hour'));
+        // Rate limit: max 3 requests per IP per 15 minutes
+        $stmt = $db->prepare("SELECT COUNT(*) FROM password_reset_attempts WHERE ip_address = ? AND attempted_at > DATE_SUB(NOW(), INTERVAL 15 MINUTE)");
+        $stmt->execute([$ipAddress]);
+        $recentAttempts = (int)$stmt->fetchColumn();
 
-            // Delete any old tokens for this admin
-            $stmt = $db->prepare("DELETE FROM password_resets WHERE admin_id = ?");
-            $stmt->execute([$admin['id']]);
-
-            // Insert new token
-            $stmt = $db->prepare("INSERT INTO password_resets (admin_id, token, expires_at) VALUES (?, ?, ?)");
-            $stmt->execute([$admin['id'], $token, $expires]);
-
-            // In production, send email here. For now, show the link.
-            $reset_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/cellverse/admin/reset_password.php?token=' . $token;
-
-            $message = 'Password reset link generated. In production, this would be emailed. For now: <a href="' . htmlspecialchars($reset_url) . '" style="color:#00d4aa;text-decoration:underline;">Reset Password</a>';
-            $message_type = 'success';
+        if ($recentAttempts >= 3) {
+            $message = 'Too many reset requests. Please try again in 15 minutes.';
+            $message_type = 'error';
         } else {
-            // Don't reveal whether username or email is wrong
-            $message = 'If the username and email match an account, a reset link has been generated.';
-            $message_type = 'success';
+            // Record this attempt
+            $stmt = $db->prepare("INSERT INTO password_reset_attempts (ip_address, attempted_at) VALUES (?, NOW())");
+            $stmt->execute([$ipAddress]);
+
+            $stmt = $db->prepare("SELECT id, username, email FROM admin_users WHERE username = ? AND email = ?");
+            $stmt->execute([$username, $email]);
+            $admin = $stmt->fetch();
+
+            if ($admin) {
+                $token = bin2hex(random_bytes(32));
+                $expires = date('Y-m-d H:i:s', strtotime('+1 hour'));
+
+                $stmt = $db->prepare("DELETE FROM password_resets WHERE admin_id = ?");
+                $stmt->execute([$admin['id']]);
+
+                $stmt = $db->prepare("INSERT INTO password_resets (admin_id, token, expires_at) VALUES (?, ?, ?)");
+                $stmt->execute([$admin['id'], $token, $expires]);
+
+                $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
+                $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+                $resetUrl = $scheme . '://' . $host . BASE_URL . '/admin/reset_password.php?token=' . $token;
+
+                $emailResult = sendPasswordResetEmail($admin['email'], $admin['username'], $resetUrl);
+
+                if ($emailResult['success']) {
+                    $message = 'A password reset link has been sent to your email address.';
+                    $message_type = 'success';
+                } else {
+                    $message = $emailResult['message'];
+                    $message_type = 'error';
+                }
+            } else {
+                // Don't reveal whether username or email is wrong
+                $message = 'If the username and email match an account, a reset link has been sent.';
+                $message_type = 'success';
+            }
         }
     }
 }
@@ -58,6 +80,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="icon" type="image/svg+xml" href="../images/favicon.svg">
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <style>
+        .password-wrapper { position: relative; }
+        .password-toggle { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #64748b; padding: 4px; display: flex; align-items: center; }
+        .password-toggle:hover { color: #94a3b8; }
+        .password-toggle svg { width: 20px; height: 20px; }
+    </style>
 </head>
 <body class="login-page">
     <div class="login-container">
@@ -75,7 +103,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
 
             <?php if ($message): ?>
-                <div class="alert alert-<?php echo $message_type === 'success' ? 'confirmed' : 'error'; ?>"><?php echo $message; ?></div>
+                <div class="alert alert-<?php echo $message_type === 'success' ? 'confirmed' : 'error'; ?>"><?php echo htmlspecialchars($message); ?></div>
             <?php endif; ?>
 
             <form method="POST">
@@ -88,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label for="email">Admin Email</label>
                     <input type="email" id="email" name="email" required maxlength="200" autocomplete="email">
                 </div>
-                <button type="submit" class="btn btn-primary" style="width:100%;">Generate Reset Link</button>
+                <button type="submit" class="btn btn-primary" style="width:100%;">Send Reset Link</button>
             </form>
             <p style="text-align:center;margin-top:16px;"><a href="login.php" style="color:#94a3b8;text-decoration:underline;font-size:0.9rem;">Back to Login</a></p>
         </div>

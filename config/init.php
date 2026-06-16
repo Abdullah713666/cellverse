@@ -8,11 +8,12 @@ require_once __DIR__ . '/database.php';
 
 // Start session with hardened cookie parameters
 if (session_status() === PHP_SESSION_NONE) {
+    $isProduction = !empty($_SERVER['HTTPS']) || (getenv('RAILWAY_ENVIRONMENT') !== false);
     session_set_cookie_params([
         'lifetime' => 0,
         'path' => '/',
         'domain' => '',
-        'secure' => isset($_SERVER['HTTPS']),
+        'secure' => $isProduction,
         'httponly' => true,
         'samesite' => 'Strict'
     ]);
