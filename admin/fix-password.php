@@ -21,6 +21,12 @@ $stmt = $db->prepare("UPDATE admin_users SET password_hash = ? WHERE username = 
 $stmt->execute([$hash, $username]);
 $count = $stmt->rowCount();
 
-echo "Updated $count user(s). Hash: " . substr($hash, 0, 15) . "...";
-echo "<br>Password is now: $password";
-echo "<br><br><strong>DELETE THIS FILE NOW: admin/fix-password.php</strong>";
+// Also show existing users
+$users = $db->query("SELECT id, username, email, role FROM admin_users")->fetchAll(PDO::FETCH_ASSOC);
+echo "Updated $count user(s). Hash: " . substr($hash, 0, 15) . "...<br>";
+echo "Password is now: $password<br><br>";
+echo "<strong>Existing users:</strong><br>";
+foreach ($users as $u) {
+    echo "ID={$u['id']} user={$u['username']} email=" . ($u['email'] ?: 'NULL') . " role=" . ($u['role'] ?: 'NULL') . "<br>";
+}
+echo "<br><strong>DELETE THIS FILE NOW: admin/fix-password.php</strong>";
