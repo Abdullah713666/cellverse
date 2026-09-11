@@ -145,12 +145,13 @@ CREATE TABLE IF NOT EXISTS users (
 ) ENGINE=InnoDB;
 
 -- ============================================
--- Seed Data
+-- Demo Seed Data
 -- ============================================
 
--- Default admin user (password: admin123)
+-- Seed admin uses a random bcrypt hash with no published default password.
+-- Set a unique password manually before using a real deployment.
 INSERT INTO admin_users (username, password_hash, email, role) VALUES
-('admin', '$2y$10$lu.cfc9SzhtL8RxZHLlY.OD38oJBkujLOUKmaNETFKIVdfnQdTlvG', 'admin@cellverse.com', 'super_admin');
+('admin', '$2y$12$WcleTkIhkTav1df6MYlSzu0XoV9PE/fAnbLnmET92P1sQj6DDhC8.', 'admin@cellverse.com', 'super_admin');
 
 -- Default categories
 INSERT INTO categories (name, slug, description, display_order) VALUES
@@ -195,7 +196,7 @@ INSERT INTO faqs (question, answer, category, display_order) VALUES
 ('Do you ship internationally?', 'Currently we primarily serve the Pakistani market. For international orders, please contact us for custom arrangements.', 'Shipping', 7),
 ('How do I track my order?', 'Once your order is shipped, you will receive a tracking number via email and SMS.', 'Shipping', 8);
 
--- Default site settings
+-- Demo site settings
 INSERT INTO site_settings (setting_key, setting_value) VALUES
 ('site_name', 'CellVerse'),
 ('site_tagline', 'Bulk Mobile Accessories at Wholesale Prices'),
@@ -208,7 +209,7 @@ INSERT INTO site_settings (setting_key, setting_value) VALUES
 ('map_embed_url', 'https://www.openstreetmap.org/export/embed.html?bbox=74.3487%2C31.5104%2C74.3687%2C31.5304&layer=mapnik&marker=31.5204%2C74.3587'),
 ('recaptcha_site_key', ''),
 ('recaptcha_secret_key', ''),
-('about_text', 'CellVerse is Pakistan\'s leading wholesale supplier of mobile accessories. With over 10 years of experience, we provide high-quality products at competitive bulk prices to retailers and businesses across the country.'),
+('about_text', 'CellVerse is a wholesale supplier of mobile accessories. This portfolio dataset uses demonstration content.'),
 ('facebook_url', 'https://facebook.com/cellverse'),
 ('instagram_url', 'https://instagram.com/cellverse'),
 ('youtube_url', 'https://youtube.com/cellverse'),
@@ -223,17 +224,14 @@ INSERT INTO site_settings (setting_key, setting_value) VALUES
 -- Migrations for existing installs
 -- ============================================
 
--- Add email column to admin_users if missing
 SET @col_exists = (SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = 'admin_users' AND column_name = 'email');
 SET @sql = IF(@col_exists = 0, 'ALTER TABLE admin_users ADD COLUMN email VARCHAR(200) AFTER password_hash', 'SELECT 1');
 PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
--- Add role column to admin_users if missing
 SET @col_exists = (SELECT COUNT(*) FROM information_schema.columns WHERE table_schema = DATABASE() AND table_name = 'admin_users' AND column_name = 'role');
 SET @sql = IF(@col_exists = 0, 'ALTER TABLE admin_users ADD COLUMN role ENUM(\'super_admin\',\'admin\') DEFAULT \'admin\' AFTER email', 'SELECT 1');
 PREPARE stmt FROM @sql; EXECUTE stmt; DEALLOCATE PREPARE stmt;
 
--- Create password_resets table if missing
 CREATE TABLE IF NOT EXISTS password_resets (
     id INT AUTO_INCREMENT PRIMARY KEY,
     admin_id INT NOT NULL,
@@ -244,7 +242,6 @@ CREATE TABLE IF NOT EXISTS password_resets (
     FOREIGN KEY (admin_id) REFERENCES admin_users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 
--- Create login_attempts table if missing
 CREATE TABLE IF NOT EXISTS login_attempts (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(50) NOT NULL,
@@ -253,7 +250,6 @@ CREATE TABLE IF NOT EXISTS login_attempts (
     INDEX idx_lookup (username, ip_address, attempted_at)
 ) ENGINE=InnoDB;
 
--- Create password_reset_attempts table if missing
 CREATE TABLE IF NOT EXISTS password_reset_attempts (
     id INT AUTO_INCREMENT PRIMARY KEY,
     ip_address VARCHAR(45) NOT NULL,
@@ -261,5 +257,4 @@ CREATE TABLE IF NOT EXISTS password_reset_attempts (
     INDEX idx_lookup (ip_address, attempted_at)
 ) ENGINE=InnoDB;
 
--- Set default admin role to super_admin if null
 UPDATE admin_users SET role = 'super_admin' WHERE role IS NULL AND username = 'admin';
